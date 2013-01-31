@@ -67,7 +67,7 @@ public class Game extends com.badlogic.gdx.Game {
 			proceed = true; 
 		}
 		else {
-			sprite.rotate(-2);
+			sprite.rotate(2);
 		}
 		
 		if(manager.getProgress() == 1 && proceed  == true) {
