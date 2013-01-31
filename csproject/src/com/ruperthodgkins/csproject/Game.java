@@ -33,8 +33,6 @@ public class Game extends com.badlogic.gdx.Game {
 		manager.load("data/loading.png", Texture.class);
 		manager.load("data/cat.ogg", Music.class);
 		
-		//manager.finishLoading();
-		//texture = manager.get("data/loading.png",Texture.class);
 		texture = new Texture(Gdx.files.internal("data/loading.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		TextureRegion region = new TextureRegion(texture, 0, 0, 32, 32);
@@ -58,10 +56,13 @@ public class Game extends com.badlogic.gdx.Game {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		sprite.draw(batch);
-		
+
 		if(manager.update()) {
+			//once loaded go to new screen
 		}
 		else {
+			//loading code
+			//due to speed of loading, consider switching to loaded screen but wait for user input before injecting loaded code
 		}
 		
 		if(sprite.getRotation() == 270) { 
@@ -71,7 +72,8 @@ public class Game extends com.badlogic.gdx.Game {
 			sprite.rotate(2);
 		}
 		
-		if(manager.getProgress() == 1 && proceed  == true) {
+		if(manager.getProgress() == 1  && proceed  == true) {
+			System.out.println("Test");
 			texture = manager.get("data/libgdx.png",Texture.class);
 			TextureRegion region = new TextureRegion(texture, 0, 0, 512, 275);
 			
@@ -79,6 +81,7 @@ public class Game extends com.badlogic.gdx.Game {
 			sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
 			sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 			sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
+			//proceed = false;
 		}
 		
 		batch.end();
