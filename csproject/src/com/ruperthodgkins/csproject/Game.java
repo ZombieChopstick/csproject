@@ -18,6 +18,7 @@ public class Game extends com.badlogic.gdx.Game {
 	private Sprite sprite;
 	private AssetManager manager;
 	private boolean proceed = false;
+	private int test = 100;
 	
 	@Override
 	public void create() {		
