@@ -3,6 +3,7 @@ package com.ruperthodgkins.csproject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
 
 public class Game extends com.badlogic.gdx.Game {
 	private OrthographicCamera camera;
@@ -20,6 +22,7 @@ public class Game extends com.badlogic.gdx.Game {
 	private AssetManager manager;
 	private boolean proceed = false;
 	private BitmapFont font;
+	private Matrix4 normalProjection;
 	
 	@Override
 	public void create() {		
@@ -27,6 +30,7 @@ public class Game extends com.badlogic.gdx.Game {
 		float h = Gdx.graphics.getHeight();
 		
 		camera = new OrthographicCamera(1, h/w);
+		normalProjection = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		
@@ -55,11 +59,13 @@ public class Game extends com.badlogic.gdx.Game {
 	public void render() {		
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+		batch.setProjectionMatrix(camera.combined);
 		sprite.draw(batch);
-		font.setColor(0,0,0,1);
-		font.draw(batch,"Loading...",0,0);
+		batch.setProjectionMatrix(normalProjection);
+		font.setColor(Color.BLACK);
+		font.setScale(2);
+		font.draw(batch,"Loading...",Gdx.graphics.getWidth() / 2 - (25 * font.getScaleX()) ,Gdx.graphics.getHeight() - 40);
 		
 		if(manager.update()) {
 			//once loaded go to new screen
@@ -85,7 +91,6 @@ public class Game extends com.badlogic.gdx.Game {
 			sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 			sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
 		}
-		font.draw(batch,"Loading...",0,0);
 		batch.end();
 	}
 
@@ -99,5 +104,8 @@ public class Game extends com.badlogic.gdx.Game {
 
 	@Override
 	public void resume() {
+		manager.load("data/libgdx.png", Texture.class);
+		manager.load("data/loading.png", Texture.class);
+		manager.load("data/cat.ogg", Music.class);
 	}
 }
