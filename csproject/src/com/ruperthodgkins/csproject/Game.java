@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,6 +19,7 @@ public class Game extends com.badlogic.gdx.Game {
 	private Sprite sprite;
 	private AssetManager manager;
 	private boolean proceed = false;
+	private BitmapFont font;
 	
 	@Override
 	public void create() {		
@@ -26,6 +28,7 @@ public class Game extends com.badlogic.gdx.Game {
 		
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();
+		font = new BitmapFont();
 		
 		manager = new AssetManager();
 		manager.load("data/libgdx.png", Texture.class);
@@ -55,7 +58,9 @@ public class Game extends com.badlogic.gdx.Game {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		sprite.draw(batch);
-
+		font.setColor(0,0,0,1);
+		font.draw(batch,"Loading...",0,0);
+		
 		if(manager.update()) {
 			//once loaded go to new screen
 		}
@@ -72,7 +77,6 @@ public class Game extends com.badlogic.gdx.Game {
 		}
 		
 		if(manager.getProgress() == 1  && proceed  == true) {
-			System.out.println("Test");
 			texture = manager.get("data/libgdx.png",Texture.class);
 			TextureRegion region = new TextureRegion(texture, 0, 0, 512, 275);
 			
@@ -80,9 +84,8 @@ public class Game extends com.badlogic.gdx.Game {
 			sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
 			sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 			sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
-			//proceed = false;
 		}
-		
+		font.draw(batch,"Loading...",0,0);
 		batch.end();
 	}
 
