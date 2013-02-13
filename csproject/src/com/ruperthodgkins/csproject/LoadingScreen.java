@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Matrix4;
 
 public class LoadingScreen implements Screen {
 
@@ -23,11 +22,10 @@ public class LoadingScreen implements Screen {
 	private Sprite sprite;
 	private AssetManager manager = AssetsManager.getInstance();
 	private BitmapFont font;
-	private Matrix4 normalProjection;
-	private Game game;
+	private Game main;
 	
-	public LoadingScreen(Game g) {
-		game = g;
+	public LoadingScreen(Game m) {
+		main = m;
 	}
 	
 	@Override
@@ -37,18 +35,20 @@ public class LoadingScreen implements Screen {
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		sprite.draw(batch);
-		batch.setProjectionMatrix(normalProjection);
+		batch.setProjectionMatrix(batch.getProjectionMatrix().setToOrtho2D(0, 0, main.getWidth(),  main.getHeight()));
 		font.setColor(Color.BLACK);
 		font.setScale(2);
-		font.draw(batch,"Loading...",Gdx.graphics.getWidth() / 2 - (25 * font.getScaleX()) ,Gdx.graphics.getHeight() - 40);
 		
 		if(manager.update()) {
 			//once loaded go to new screen
-			System.out.println("Loading Complete");
-			game.setScreen(new GameScreen(game));
+			//System.out.println("Loading Complete");
+			font.draw(batch,"Loading Complete", main.getWidth() / 2 - (50 * font.getScaleX()) ,main.getHeight() - 40);
+			main.setScreen(new GameScreen(main));
 		}
 		else {
 			//loading code
+			sprite.rotate(sprite.getRotation() + 1);
+			font.draw(batch,"Loading...", main.getWidth() / 2 - (25 * font.getScaleX()) ,main.getHeight() - 40);
 		}
 		batch.end();
 	}
@@ -59,11 +59,10 @@ public class LoadingScreen implements Screen {
 
 	@Override
 	public void show() {
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+		float w = main.getWidth();
+		float h = main.getHeight();
 		Texture.setEnforcePotImages(false);
 		camera = new OrthographicCamera(1, h/w);
-		normalProjection = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 	
@@ -71,6 +70,7 @@ public class LoadingScreen implements Screen {
 		manager.load("data/cat.ogg", Music.class);
 		manager.load(AssetsManager.CARDBACK,Texture.class);
 		manager.load(AssetsManager.CARDPOTION,Texture.class);
+		manager.load("data/hex.png",Texture.class);
 		
 		texture = new Texture(Gdx.files.internal("data/loading.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);

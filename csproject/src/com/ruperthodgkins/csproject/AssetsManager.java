@@ -8,6 +8,7 @@ public class AssetsManager {
 	
 	public static final String CARDBACK = "data/kof_cardback.png";
 	public static final String CARDPOTION = "data/cpotion.png";
+	public static final String CARDSUPERPOTION = "data/cpotion.png";
 	
 	private AssetsManager() {
 		
