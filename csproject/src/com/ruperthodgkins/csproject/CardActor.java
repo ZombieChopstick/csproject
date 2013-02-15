@@ -3,9 +3,11 @@ package com.ruperthodgkins.csproject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Card {
+public class CardActor extends Actor{
 	private String name;
 	private Texture cardPic;
 	private Texture cardBackPic;
@@ -16,7 +18,7 @@ public class Card {
 	private int zindex;
 	private static int lastz = 0;
 	
-	public Card(String name, Texture pic) {
+	public CardActor(String name, Texture pic) {
 		this.name = name;
 		cardPic = pic;
 		AssetManager manager = AssetsManager.getInstance();
@@ -32,7 +34,7 @@ public class Card {
 		lastz++;
 	}
 	
-	public Card(String name, Texture pic, int x, int y) {
+	public CardActor(String name, Texture pic, int x, int y) {
 		this.name = name;
 		cardPic = pic;
 		AssetManager manager = AssetsManager.getInstance();
@@ -70,15 +72,34 @@ public class Card {
 		bbox.setY(y);
 	}
 	
-	public void setZIndex(int z) {
-		zindex = z;
-	}
-	
 	public boolean hit(int x, int y) {
 		if(bbox.contains(x,Gdx.graphics.getHeight() - y)) {
 			//System.out.println("Mouse Hit: " + x + "," + y);
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void draw(SpriteBatch batch, float parentAlpha) {
+		// TODO Auto-generated method stub
+		batch.draw(getCardPic(), getX(), getY(), getCardPic().getWidth(), getCardPic().getHeight());
+	}
+
+	@Override
+	public Actor hit(float x, float y) {
+		if(bbox.contains(x,Gdx.graphics.getHeight() - y)) {
+			//System.out.println("Mouse Hit: " + x + "," + y);
+			return this;
+		}
+		return null;
+	}
+	
+	@Override
+	public void touchDragged(float x, float y, int pointer) {
+		if(hit(x,y) != null) {
+			setPosition((int)x,(int)y);
+			System.out.println("Moving");
+		}
 	}
 }

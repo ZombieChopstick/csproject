@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -28,9 +29,12 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-
+		Mesh m = guard1.getMesh();
+		if(m != null) {
+			m.render(GL10.GL_TRIANGLE_FAN, 0, 6);
+		}
 		batch.begin();
 		batch.setProjectionMatrix(batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight()));
 		batch.draw(guard1.getCharPic(), guard1.getX(), guard1.getY(), guard1.getCharPic().getWidth(), guard1.getCharPic().getHeight());
@@ -55,15 +59,20 @@ public class GameScreen implements Screen {
 			holdingCard = null;
 		}
 		
+		int highZ = 0;
 		for(Card c : hand) {
-			if(c.hit(Gdx.input.getX(),Gdx.input.getY())) {
+			if(c.hit(Gdx.input.getX(),Gdx.input.getY()) && c.getZIndex()>=highZ) {
 				c.flipFaceUp();
+				highZ = c.getZIndex();
 			}
 			else {
 				c.flipFaceDown();
 			}
 		}
 		//System.out.println(holdingCard);
+		if(guard1.hit(Gdx.input.getX(),Gdx.input.getY())) {
+			System.out.println("Hit");
+		}
 	}
 
 	@Override

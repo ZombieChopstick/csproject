@@ -47,7 +47,7 @@ public class LoadingScreen implements Screen {
 		}
 		else {
 			//loading code
-			sprite.rotate(sprite.getRotation() + 1);
+			sprite.rotate(sprite.getRotation() + delta);
 			font.draw(batch,"Loading...", main.getWidth() / 2 - (25 * font.getScaleX()) ,main.getHeight() - 40);
 		}
 		batch.end();
