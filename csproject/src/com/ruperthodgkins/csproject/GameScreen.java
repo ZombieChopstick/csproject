@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen {
@@ -15,12 +16,13 @@ public class GameScreen implements Screen {
 	private SpriteBatch batch;
 	private Texture texture;
 	private AssetManager manager = AssetsManager.getInstance();
+	@SuppressWarnings("unused")
 	private Game main;
 	private Card potionCard;
 	private Card superPotionCard;
 	private Card holdingCard = null;
 	private ArrayList<Card> hand = new ArrayList<Card>();
-	
+	private BitmapFont font;	
 	private Character guard1;
 	
 	public GameScreen(Game m) {
@@ -37,22 +39,21 @@ public class GameScreen implements Screen {
 		}
 		batch.begin();
 		batch.setProjectionMatrix(batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight()));
-		batch.draw(guard1.getCharPic(), guard1.getX(), guard1.getY(), guard1.getCharPic().getWidth(), guard1.getCharPic().getHeight());
+		font.draw(batch, "Mouse: " + Gdx.input.getX() + "," + Gdx.input.getY(), Game.getWidth()-150, Game.getHeight()-30);
 		batch.draw(potionCard.getCardPic(), potionCard.getX(), potionCard.getY(), potionCard.getCardPic().getWidth(), potionCard.getCardPic().getHeight());
 		batch.draw(superPotionCard.getCardPic(), superPotionCard.getX(), superPotionCard.getY(), superPotionCard.getCardPic().getWidth(), superPotionCard.getCardPic().getHeight());
-		batch.end();
 		
 		if(Gdx.input.isTouched()) {
 			if(potionCard.hit(Gdx.input.getX(),Gdx.input.getY()) && holdingCard == null) {
-				potionCard.setPosition(Gdx.input.getX()-(potionCard.getCardPic().getWidth()/2), main.getHeight()-Gdx.input.getY()-(potionCard.getCardPic().getHeight()/2));
+				potionCard.setPosition(Gdx.input.getX()-(potionCard.getCardPic().getWidth()/2), Game.getHeight()-Gdx.input.getY()-(potionCard.getCardPic().getHeight()/2));
 				holdingCard = potionCard;
 			}
 			else if(superPotionCard.hit(Gdx.input.getX(),Gdx.input.getY()) && holdingCard == null) {
-				superPotionCard.setPosition(Gdx.input.getX()-(potionCard.getCardPic().getWidth()/2), main.getHeight()-Gdx.input.getY()-(potionCard.getCardPic().getHeight()/2));
+				superPotionCard.setPosition(Gdx.input.getX()-(potionCard.getCardPic().getWidth()/2), Game.getHeight()-Gdx.input.getY()-(potionCard.getCardPic().getHeight()/2));
 				holdingCard = superPotionCard;
 			}
-			else {
-				holdingCard.setPosition(Gdx.input.getX()-(holdingCard.getCardPic().getWidth()/2), main.getHeight()-Gdx.input.getY()-(holdingCard.getCardPic().getHeight()/2));
+			else if(holdingCard!=null) {
+				holdingCard.setPosition(Gdx.input.getX()-(holdingCard.getCardPic().getWidth()/2), Game.getHeight()-Gdx.input.getY()-(holdingCard.getCardPic().getHeight()/2));
 			}
 		}
 		else {
@@ -71,8 +72,9 @@ public class GameScreen implements Screen {
 		}
 		//System.out.println(holdingCard);
 		if(guard1.hit(Gdx.input.getX(),Gdx.input.getY())) {
-			System.out.println("Hit");
+			batch.draw(guard1.getCharPic(), guard1.getX(), guard1.getY(), guard1.getCharPic().getWidth(), guard1.getCharPic().getHeight());
 		}
+		batch.end();
 	}
 
 	@Override
@@ -82,7 +84,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
-
+		font = new BitmapFont();
 		potionCard = new Card("Potion", manager.get(AssetsManager.CARDPOTION, Texture.class));
 		superPotionCard = new Card("Super Potion", manager.get(AssetsManager.CARDSUPERPOTION, Texture.class),200,0);
 		

@@ -9,6 +9,6 @@ public class Game extends com.badlogic.gdx.Game {
 		setScreen(new LoadingScreen(this));
 	}
 	
-	public int getHeight() { return Gdx.graphics.getHeight(); }
-	public int getWidth() { return Gdx.graphics.getWidth(); }
+	public static int getHeight() { return Gdx.graphics.getHeight(); }
+	public static int getWidth() { return Gdx.graphics.getWidth(); }
 }

@@ -35,20 +35,20 @@ public class LoadingScreen implements Screen {
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		sprite.draw(batch);
-		batch.setProjectionMatrix(batch.getProjectionMatrix().setToOrtho2D(0, 0, main.getWidth(),  main.getHeight()));
+		batch.setProjectionMatrix(batch.getProjectionMatrix().setToOrtho2D(0, 0, Game.getWidth(),  Game.getHeight()));
 		font.setColor(Color.BLACK);
 		font.setScale(2);
 		
 		if(manager.update()) {
 			//once loaded go to new screen
 			//System.out.println("Loading Complete");
-			font.draw(batch,"Loading Complete", main.getWidth() / 2 - (50 * font.getScaleX()) ,main.getHeight() - 40);
+			font.draw(batch,"Loading Complete", Game.getWidth() / 2 - (50 * font.getScaleX()) ,Game.getHeight() - 40);
 			main.setScreen(new GameScreen(main));
 		}
 		else {
 			//loading code
 			sprite.rotate(sprite.getRotation() + delta);
-			font.draw(batch,"Loading...", main.getWidth() / 2 - (25 * font.getScaleX()) ,main.getHeight() - 40);
+			font.draw(batch,"Loading...", Game.getWidth() / 2 - (25 * font.getScaleX()) ,Game.getHeight() - 40);
 		}
 		batch.end();
 	}
@@ -59,8 +59,8 @@ public class LoadingScreen implements Screen {
 
 	@Override
 	public void show() {
-		float w = main.getWidth();
-		float h = main.getHeight();
+		float w = Game.getWidth();
+		float h = Game.getHeight();
 		Texture.setEnforcePotImages(false);
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();

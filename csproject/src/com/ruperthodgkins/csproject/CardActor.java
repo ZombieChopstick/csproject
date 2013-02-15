@@ -61,8 +61,8 @@ public class CardActor extends Actor{
 	public boolean isFaceUp() { return faceUp; }
 	public void flipFaceUp() { faceUp = true; }
 	public void flipFaceDown() { faceUp = false; }
-	public int getY() { return y; }
-	public int getX() { return x; }
+	public float getY() { return y; }
+	public float getX() { return x; }
 	public int getZIndex() { return zindex; }
 	
 	public void setPosition(int x, int y) {
@@ -86,7 +86,6 @@ public class CardActor extends Actor{
 		batch.draw(getCardPic(), getX(), getY(), getCardPic().getWidth(), getCardPic().getHeight());
 	}
 
-	@Override
 	public Actor hit(float x, float y) {
 		if(bbox.contains(x,Gdx.graphics.getHeight() - y)) {
 			//System.out.println("Mouse Hit: " + x + "," + y);
@@ -95,7 +94,6 @@ public class CardActor extends Actor{
 		return null;
 	}
 	
-	@Override
 	public void touchDragged(float x, float y, int pointer) {
 		if(hit(x,y) != null) {
 			setPosition((int)x,(int)y);
