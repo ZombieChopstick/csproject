@@ -23,7 +23,7 @@ public class GameScreen implements Screen {
 	private Card holdingCard = null;
 	private ArrayList<Card> hand = new ArrayList<Card>();
 	private BitmapFont font;	
-	private Character guard1;
+	private Character guard1,guard2;
 	
 	public GameScreen(Game m) {
 		main = m;
@@ -34,8 +34,10 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Mesh m = guard1.getMesh();
-		if(m != null) {
+		Mesh m2 = guard2.getMesh();
+		if(m != null && m2!=null) {
 			m.render(GL10.GL_TRIANGLE_FAN, 0, 6);
+			m2.render(GL10.GL_TRIANGLE_FAN, 0, 6);
 		}
 		batch.begin();
 		batch.setProjectionMatrix(batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight()));
@@ -74,6 +76,9 @@ public class GameScreen implements Screen {
 		if(guard1.hit(Gdx.input.getX(),Gdx.input.getY())) {
 			batch.draw(guard1.getCharPic(), guard1.getX(), guard1.getY(), guard1.getCharPic().getWidth(), guard1.getCharPic().getHeight());
 		}
+		if(guard2.hit(Gdx.input.getX(),Gdx.input.getY())) {
+			batch.draw(guard2.getCharPic(), guard2.getX(), guard2.getY(), guard2.getCharPic().getWidth(), guard2.getCharPic().getHeight());
+		}
 		batch.end();
 	}
 
@@ -92,6 +97,7 @@ public class GameScreen implements Screen {
 		hand.add(superPotionCard);
 		
 		guard1 = new Character(800,400,"Guard 1",manager.get("data/hex.png",Texture.class), 1, 0, 0, 0, 0, 0, 0);
+		guard2 = new Character(863,400,"Guard 1",manager.get("data/hex.png",Texture.class), 1, 0, 0, 0, 0, 0, 0);
 	}
 
 	@Override

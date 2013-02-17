@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
 <module>
-    <entry-point class="com.ruperthodgkins.csproject.client.GwtLauncher"/>
-    <set-configuration-property name="gdx.assetpath" value="../csproject-android/assets"/>
-    <inherits name="Game"/>
-    <inherits name="aurelienribon.tweenengine"/>
-    <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt"/>
+	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
+	<inherits name='aurelienribon.tweenengine' />
+	<inherits name='Game' />
+	<entry-point class='com.ruperthodgkins.csproject.client.GwtLauncher' />
+	<set-configuration-property name="gdx.assetpath" value="../csproject-android/assets" />
 </module>

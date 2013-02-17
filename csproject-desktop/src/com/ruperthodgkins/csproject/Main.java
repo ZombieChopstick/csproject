@@ -8,10 +8,10 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "CS Project";
 		cfg.useGL20 = false;
-		cfg.width = 1280;
-		cfg.height = 720;
+		cfg.width = 800;
+		cfg.height = 600;
 		cfg.fullscreen = false;
-		cfg.resizable = false;
+		cfg.resizable = true;
 		
 		new LwjglApplication(new Game(), cfg);
 	}

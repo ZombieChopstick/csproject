@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
-jarsExcludedFromWebInfLib=
+jarsExcludedFromWebInfLib=D\:/Users/Rupert/Documents/GitHub/csproject/csproject/libs/gdx-sources.jar|D\:/Users/Rupert/Documents/GitHub/csproject/csproject/libs/gdx.jar
 warSrcDir=war
 warSrcDirIsOutput=true

@@ -1,19 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry kind="src" path="src"/>
-    <classpathentry combineaccessrules="false" kind="src" path="/csproject"/>
-    <classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
-    <classpathentry kind="output" path="war/WEB-INF/classes"/>
-    <classpathentry kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
-    <classpathentry kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt.jar" sourcepath="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
-    <classpathentry kind="lib" path="war/WEB-INF/lib/gdx-sources.jar"/>
-    <classpathentry kind="lib" path="war/WEB-INF/lib/gdx.jar"/>
-    <classpathentry kind="lib" path="war/WEB-INF/lib/tween-engine-api-sources.jar"/>
-    <classpathentry kind="lib" path="war/WEB-INF/lib/tween-engine-api.jar"/>
-    <classpathentry kind="lib" path="/csproject/libs/gdx-sources.jar"/>
-    <classpathentry kind="lib" path="/csproject/libs/gdx.jar" sourcepath="/csproject/libs/gdx-sources.jar"/>
-    <classpathentry kind="lib" path="/csproject/libs/tween-engine-api-sources.jar"/>
-    <classpathentry kind="lib" path="/csproject/libs/tween-engine-api.jar" sourcepath="/csproject/libs/tween-engine-api-sources.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csproject">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="csproject/libs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/csproject/libs/gdx.jar" sourcepath="/csproject/libs/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="/csproject/libs/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/tween-engine-api.jar" sourcepath="war/WEB-INF/lib/tween-engine-api-sources.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/tween-engine-api-sources.jar"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="D:/Users/Rupert/Documents/GitHub/csproject/csproject-html/war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/Users/Rupert/Documents/GitHub/csproject/csproject-html/war/WEB-INF/lib/gdx-backend-gwt.jar" sourcepath="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
