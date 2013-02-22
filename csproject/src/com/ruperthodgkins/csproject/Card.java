@@ -5,7 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Card {
+public class Card implements Comparable<Card> {
 	private String name;
 	private Texture cardPic;
 	private Texture cardBackPic;
@@ -13,8 +13,7 @@ public class Card {
 	private int x;
 	private int y;
 	private Rectangle bbox;
-	private int zindex;
-	private static int lastz = 0;
+	private int z = 0;
 	
 	public Card(String name, Texture pic) {
 		this.name = name;
@@ -28,8 +27,7 @@ public class Card {
 		System.out.println("Card Size: " + cardPic.getWidth() + "x" + cardPic.getHeight());
 		System.out.println("Bounds Position: " + bbox.getX() + "," + bbox.getY());
 		System.out.println("Bounds Size: " + bbox.getWidth() + "x" + bbox.getHeight());
-		zindex = lastz;
-		lastz++;
+		z = 0;
 	}
 	
 	public Card(String name, Texture pic, int x, int y) {
@@ -44,8 +42,7 @@ public class Card {
 		System.out.println("Card Size: " + cardPic.getWidth() + "x" + cardPic.getHeight());
 		System.out.println("Bounds Position: " + bbox.getX() + "," + bbox.getY());
 		System.out.println("Bounds Size: " + bbox.getWidth() + "x" + bbox.getHeight());
-		zindex = lastz;
-		lastz++;
+		z = 0;
 	}
 	
 	public Texture getCardPic() {
@@ -61,7 +58,7 @@ public class Card {
 	public void flipFaceDown() { faceUp = false; }
 	public int getY() { return y; }
 	public int getX() { return x; }
-	public int getZIndex() { return zindex; }
+	public int getZIndex() { return z; }
 	
 	public void setPosition(int x, int y) {
 		this.x = x;
@@ -71,14 +68,19 @@ public class Card {
 	}
 	
 	public void setZIndex(int z) {
-		zindex = z;
+		this.z = z;
 	}
 	
 	public boolean hit(int x, int y) {
 		if(bbox.contains(x,Gdx.graphics.getHeight() - y)) {
-			//System.out.println("Mouse Hit: " + x + "," + y);
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public int compareTo(Card c) {
+		int compareZ = ((Card)c).getZIndex();
+		return this.z - compareZ;
 	}
 }

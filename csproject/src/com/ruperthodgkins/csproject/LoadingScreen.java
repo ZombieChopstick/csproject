@@ -71,6 +71,7 @@ public class LoadingScreen implements Screen {
 		manager.load(AssetsManager.CARDBACK,Texture.class);
 		manager.load(AssetsManager.CARDPOTION,Texture.class);
 		manager.load("data/hex.png",Texture.class);
+		manager.load(AssetsManager.BUTTONENDTURN,Texture.class);
 		
 		texture = new Texture(Gdx.files.internal("data/loading.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
