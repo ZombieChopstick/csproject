@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Player {
 	private Hand hand;
 	private Deck deck;
-	//private Discard discard;
+	private Discard discard;
 	private ArrayList<Character> characters;
 	private static int nextID = 0;
 	private int id;
@@ -45,9 +45,9 @@ public class Player {
 		return deck;
 	}
 	
-	/*public Discard getDiscardPile() {
+	public Discard getDiscardPile() {
 		return discard;
-	}*/
+	}
 	
 	public boolean getFirstTurn() {
 		return firstTurn;
