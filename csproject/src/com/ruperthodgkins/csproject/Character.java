@@ -1,7 +1,6 @@
 package com.ruperthodgkins.csproject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,7 +22,7 @@ public class Character {
 	private int x;
 	private int y;
 	private Mesh mesh;
-	private List<Vector2> vertices = new ArrayList<Vector2>();
+	private ArrayList<Vector2> vertices = new ArrayList<Vector2>();
 	
 	public Character(int x, int y, String name, Texture pic, int lev, int currXP, int att, int def, int str, int mag, int hp) {
 		this.name = name;
@@ -46,18 +45,17 @@ public class Character {
 				   this.x + 31.5f, this.y, 0};
 		mesh.setVertices(v);
 		mesh.setIndices(new short[] { 0, 1, 2, 3, 4, 5});
-		this.vertices.add(new Vector2(this.x,this.y+18f));
-		this.vertices.add(new Vector2(this.x,this.y+54f));
-		this.vertices.add(new Vector2(this.x+31.5f,this.y+72f));
-		this.vertices.add(new Vector2(this.x+63f,this.y+54f));
-		this.vertices.add(new Vector2(this.x+63f,this.y+18f));
-		this.vertices.add(new Vector2(this.x+31.5f,this.y));
+		vertices.add(new Vector2(this.x,this.y+18f));
+		vertices.add(new Vector2(this.x,this.y+54f));
+		vertices.add(new Vector2(this.x+31.5f,this.y+72f));
+		vertices.add(new Vector2(this.x+63f,this.y+54f));
+		vertices.add(new Vector2(this.x+63f,this.y+18f));
+		vertices.add(new Vector2(this.x+31.5f,this.y));
 	}
 
 	public String getName() {
 		return name;
 	}
-
 
 	public int getLevel() {
 		return level;
@@ -101,6 +99,26 @@ public class Character {
 	
 	public Mesh getMesh() {
 		return mesh;
+	}
+	
+	public void setPosition(int x, int y) {
+		this.x = x;
+		this.y = y;
+		float[] v = { this.x, this.y+18f, 0, 
+				   this.x, this.y + 54f, 0, 
+				   this.x + 31.5f, this.y +72f, 0, 
+				   this.x + 63f, this.y + 54f, 0, 
+				   this.x + 63f, this.y + 18f, 0, 
+				   this.x + 31.5f, this.y, 0};
+		mesh.setVertices(v);
+		mesh.setIndices(new short[] { 0, 1, 2, 3, 4, 5});
+		vertices.clear();
+		vertices.add(new Vector2(this.x,this.y+18f));
+		vertices.add(new Vector2(this.x,this.y+54f));
+		vertices.add(new Vector2(this.x+31.5f,this.y+72f));
+		vertices.add(new Vector2(this.x+63f,this.y+54f));
+		vertices.add(new Vector2(this.x+63f,this.y+18f));
+		vertices.add(new Vector2(this.x+31.5f,this.y));
 	}
 	
 	public boolean hit(int x, int y) {

@@ -1,4 +1,15 @@
 d:
 d:data
-i:data/Cat3Edit.jpg
+i:data/board.png
+i:data/buttonendturn.png
+b:data/buttonendturn.psd
+i:data/cardback.png
+i:data/cardpotion.png
+a:data/cat.ogg
+i:data/cpotion.png
+i:data/hex.png
+b:data/hex.psd
+i:data/kof_cardback.png
 i:data/libgdx.png
+i:data/loading.png
+i:data/nocard.png

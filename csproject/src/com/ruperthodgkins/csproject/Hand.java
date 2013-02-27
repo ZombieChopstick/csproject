@@ -12,6 +12,7 @@ public class Hand {
 	private int lastCardX;
 	private int lastCardY;
 	private boolean rememberLastCardPosition = false;
+	private Preview preview = Preview.getInstance();
 	
 	public Hand() {
 		hand = new ArrayList<Card>();
@@ -64,6 +65,7 @@ public class Hand {
 				possibleHits.add(c);
 			}
 			c.flipFaceDown();
+			//preview.setCardPic(null,null);
 		}
 		int lastZ = 0;
 		Card cardHit = null;
@@ -89,6 +91,7 @@ public class Hand {
 					else {
 						holdingCard.setPosition(Gdx.input.getX()-(holdingCard.getCardPic().getWidth()/2), Game.getHeight()-Gdx.input.getY()-(holdingCard.getCardPic().getHeight()/2));
 						holdingCard.flipFaceUp();
+						preview.setCardPic(holdingCard.getCardPic(),null);
 					}
 				}
 				else {
@@ -98,6 +101,7 @@ public class Hand {
 					}
 					holdingCard = null;
 					cardHit.flipFaceUp();
+					preview.setCardPic(cardHit.getCardPic(),null);
 					int index = 1;
 					for(Card c : hand) {
 						if(cardHit == c) {

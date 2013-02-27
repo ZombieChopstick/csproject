@@ -14,6 +14,7 @@ public class Card implements Comparable<Card> {
 	private int y;
 	private Rectangle bbox;
 	private int z = 0;
+	private Character representsCharacter = null;
 	
 	public Card(String name, Texture pic) {
 		this.name = name;
@@ -23,6 +24,7 @@ public class Card implements Comparable<Card> {
 		x = 0;
 		y = 0;
 		bbox = new Rectangle(x,y,cardPic.getWidth(),cardPic.getHeight());
+		System.out.println("Card Name: " + name);
 		System.out.println("Card Position: " + x + "," + y);
 		System.out.println("Card Size: " + cardPic.getWidth() + "x" + cardPic.getHeight());
 		System.out.println("Bounds Position: " + bbox.getX() + "," + bbox.getY());
@@ -38,6 +40,7 @@ public class Card implements Comparable<Card> {
 		this.x = x;
 		this.y = y;
 		bbox = new Rectangle(x,y,cardPic.getWidth(),cardPic.getHeight());
+		System.out.println("Card Name: " + name);
 		System.out.println("Card Position: " + x + "," + y);
 		System.out.println("Card Size: " + cardPic.getWidth() + "x" + cardPic.getHeight());
 		System.out.println("Bounds Position: " + bbox.getX() + "," + bbox.getY());
@@ -59,6 +62,11 @@ public class Card implements Comparable<Card> {
 	public int getY() { return y; }
 	public int getX() { return x; }
 	public int getZIndex() { return z; }
+	public Character getRepresentsChar() { return representsCharacter; }
+	
+	public void setRepresentingCharacter(Character c) {
+		representsCharacter = c;
+	}
 	
 	public void setPosition(int x, int y) {
 		this.x = x;

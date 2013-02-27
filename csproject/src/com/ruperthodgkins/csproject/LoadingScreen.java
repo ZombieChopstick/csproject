@@ -47,7 +47,12 @@ public class LoadingScreen implements Screen {
 		}
 		else {
 			//loading code
-			sprite.rotate(sprite.getRotation() + delta);
+			sprite.rotate(sprite.getRotation() + 5);
+			/*try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}*/
 			font.draw(batch,"Loading...", Game.getWidth() / 2 - (25 * font.getScaleX()) ,Game.getHeight() - 40);
 		}
 		batch.end();
@@ -66,16 +71,19 @@ public class LoadingScreen implements Screen {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 	
-		manager.load("data/libgdx.png", Texture.class);
 		manager.load("data/cat.ogg", Music.class);
 		manager.load(AssetsManager.CARDBACK,Texture.class);
+		manager.load(AssetsManager.CARDNONE,Texture.class);
 		manager.load(AssetsManager.CARDPOTION,Texture.class);
-		manager.load("data/hex.png",Texture.class);
+		manager.load(AssetsManager.CARDCHARGUARD,Texture.class);
+		manager.load(AssetsManager.HEXGREEN,Texture.class);
+		manager.load(AssetsManager.HEXGREENHOVER,Texture.class);
 		manager.load(AssetsManager.BUTTONENDTURN,Texture.class);
+		manager.load(AssetsManager.CHARGUARD,Texture.class);
 		
-		texture = new Texture(Gdx.files.internal("data/loading.png"));
+		texture = new Texture(Gdx.files.internal("data/loadingcircle.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		TextureRegion region = new TextureRegion(texture, 0, 0, 32, 32);
+		TextureRegion region = new TextureRegion(texture, 0, 0, 82, 82);
 		
 		sprite = new Sprite(region);
 		sprite.setSize(0.1f, 0.1f * sprite.getHeight() / sprite.getWidth());
