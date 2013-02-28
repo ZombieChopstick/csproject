@@ -7,10 +7,10 @@ import com.badlogic.gdx.Gdx;
 public class Hand {
 	private ArrayList<Card> hand;
 	private Card holdingCard = null;
-	private int lastX = 20;
+	private int lastX = 40;
 	private int lastZ = 1;
-	private int lastCardX;
-	private int lastCardY;
+	private float lastCardX;
+	private float lastCardY;
 	private boolean rememberLastCardPosition = false;
 	private Preview preview = Preview.getInstance();
 	
@@ -35,6 +35,10 @@ public class Hand {
 		return hand;
 	}
 	
+	public Card getHoldingCard() {
+		return holdingCard;
+	}
+	
 	public void addCard(Card c) {
 		hand.add(c);
 		c.setPosition(lastX, 0);
@@ -49,23 +53,23 @@ public class Hand {
 		return hand.remove(c);
 	}
 	
-	public void bringCardForward(Card c) {
+	/*public void bringCardForward(Card c) {
 		for(Card card : hand) {
 			if(card == c) {
 				c.setZIndex(lastZ);
 				lastZ++;
 			}
 		}
-	}
+	}*/
 	
 	public void update() {
 		ArrayList<Card> possibleHits = new ArrayList<Card>();
 		for(Card c : hand) {
+			c.flipFaceUp();
+			//c.setPosition(c.getX(), -250);
 			if(c.hit(Gdx.input.getX(),Gdx.input.getY())) {
 				possibleHits.add(c);
 			}
-			c.flipFaceDown();
-			//preview.setCardPic(null,null);
 		}
 		int lastZ = 0;
 		Card cardHit = null;
@@ -80,18 +84,18 @@ public class Hand {
 			
 			if(cardHit!= null) {
 				//System.out.println("Last Position: " + lastCardX + "," + lastCardY);
+				preview.setCardPic(cardHit.getCardPic(),null);
 				if(Gdx.input.isTouched()) {
 					if(holdingCard == null) {
 						lastCardX = cardHit.getX();
 						lastCardY = cardHit.getY();
 						rememberLastCardPosition = true;
-						cardHit.setPosition(Gdx.input.getX()-(cardHit.getCardPic().getWidth()/2), Game.getHeight()-Gdx.input.getY()-(cardHit.getCardPic().getHeight()/2));
+						cardHit.setPosition(Gdx.input.getX()-(cardHit.getCardPic().getWidth()*(Game.getWidth()/1920f)/2), Game.getHeight()-Gdx.input.getY()-(cardHit.getCardPic().getHeight()*(Game.getHeight()/1080f)/2));
 						holdingCard = cardHit;
 					}
 					else {
-						holdingCard.setPosition(Gdx.input.getX()-(holdingCard.getCardPic().getWidth()/2), Game.getHeight()-Gdx.input.getY()-(holdingCard.getCardPic().getHeight()/2));
-						holdingCard.flipFaceUp();
-						preview.setCardPic(holdingCard.getCardPic(),null);
+						holdingCard.setPosition(Gdx.input.getX()-(holdingCard.getCardPic().getWidth()*(Game.getWidth()/1920f)/2), Game.getHeight()-Gdx.input.getY()-(holdingCard.getCardPic().getHeight()*(Game.getHeight()/1080f)/2));
+						//holdingCard.flipFaceUp();
 					}
 				}
 				else {
@@ -100,23 +104,44 @@ public class Hand {
 						rememberLastCardPosition = false;
 					}
 					holdingCard = null;
-					cardHit.flipFaceUp();
-					preview.setCardPic(cardHit.getCardPic(),null);
+					//cardHit.flipFaceUp();
+					//preview.setCardPic(cardHit.getCardPic(),null);
 					int index = 1;
+					lastX = 40;
+					int inc = 1;
 					for(Card c : hand) {
 						if(cardHit == c) {
 							c.setZIndex(hand.size());
 							//System.out.println("Hit Card: " + c.getZIndex());
+							//lastX+=307;
+							//c.setPosition(lastX, 0);
+							lastX+=50;
+							inc=-1;
 						}
 						else {
 							c.setZIndex(index);
 							//System.out.println("Card #" + index + ": " + c.getZIndex());
-							index++;
+							index+=inc;
+							//c.setPosition(lastX, -50);
+							c.setPosition(lastX, 0);
+							lastX+=50;
 						}
 					}
 				}
 			}
 		}
+		//else {
+			/*int index = 1;
+			lastX = 20;
+			for(Card c : hand) {
+				c.setZIndex(index);
+				//System.out.println("Card #" + index + ": " + c.getZIndex());
+				index++;
+				c.setPosition(lastX, 0);
+				lastX+=50;
+			}*/
+			//preview.setCardPic(null, null);
+		//}
 		
 		/*if(Gdx.input.isTouched()) {
 			for(Card c : hand) {
@@ -142,5 +167,11 @@ public class Hand {
 				c.flipFaceDown();
 			}
 		}*/
+	}
+	
+	public void resize(int width, int height) {
+		for(Card c : hand) {
+			c.resize(width, height);
+		}
 	}
 }

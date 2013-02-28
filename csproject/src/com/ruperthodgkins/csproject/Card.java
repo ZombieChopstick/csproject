@@ -10,11 +10,11 @@ public class Card implements Comparable<Card> {
 	private Texture cardPic;
 	private Texture cardBackPic;
 	private boolean faceUp = false;
-	private int x;
-	private int y;
+	private float x;
+	private float y;
 	private Rectangle bbox;
 	private int z = 0;
-	private Character representsCharacter = null;
+	//private Character representsCharacter = null;
 	
 	public Card(String name, Texture pic) {
 		this.name = name;
@@ -23,7 +23,7 @@ public class Card implements Comparable<Card> {
 		cardBackPic = manager.get(AssetsManager.CARDBACK,Texture.class);
 		x = 0;
 		y = 0;
-		bbox = new Rectangle(x,y,cardPic.getWidth(),cardPic.getHeight());
+		bbox = new Rectangle(x,y,cardPic.getWidth()*(Game.getWidth()/1920f),cardPic.getHeight()*(Game.getHeight()/1080f));
 		System.out.println("Card Name: " + name);
 		System.out.println("Card Position: " + x + "," + y);
 		System.out.println("Card Size: " + cardPic.getWidth() + "x" + cardPic.getHeight());
@@ -39,7 +39,7 @@ public class Card implements Comparable<Card> {
 		cardBackPic = manager.get(AssetsManager.CARDBACK,Texture.class);
 		this.x = x;
 		this.y = y;
-		bbox = new Rectangle(x,y,cardPic.getWidth(),cardPic.getHeight());
+		bbox = new Rectangle(x,y,cardPic.getWidth()*(Game.getWidth()/1920f),cardPic.getHeight()*(Game.getHeight()/1080f));
 		System.out.println("Card Name: " + name);
 		System.out.println("Card Position: " + x + "," + y);
 		System.out.println("Card Size: " + cardPic.getWidth() + "x" + cardPic.getHeight());
@@ -59,16 +59,16 @@ public class Card implements Comparable<Card> {
 	public boolean isFaceUp() { return faceUp; }
 	public void flipFaceUp() { faceUp = true; }
 	public void flipFaceDown() { faceUp = false; }
-	public int getY() { return y; }
-	public int getX() { return x; }
+	public float getY() { return y; }
+	public float getX() { return x; }
 	public int getZIndex() { return z; }
-	public Character getRepresentsChar() { return representsCharacter; }
+	//public Character getRepresentsChar() { return representsCharacter; }
 	
-	public void setRepresentingCharacter(Character c) {
+	/*public void setRepresentingCharacter(Character c) {
 		representsCharacter = c;
-	}
+	}*/
 	
-	public void setPosition(int x, int y) {
+	public void setPosition(float x, float y) {
 		this.x = x;
 		this.y = y;
 		bbox.setX(x);
@@ -90,5 +90,16 @@ public class Card implements Comparable<Card> {
 	public int compareTo(Card c) {
 		int compareZ = ((Card)c).getZIndex();
 		return this.z - compareZ;
+	}
+	
+	public void resize(int width, int height) {
+		//x = x*(width/1920f);
+		//y = y*(height/1080f);
+		bbox.setX(x);
+		bbox.setY(y);
+		bbox.setWidth(cardPic.getWidth()*(width/1920f));
+		bbox.setHeight(cardPic.getHeight()*(height/1080f));
+		System.out.println("Bounds Position: " + bbox.getX() + "," + bbox.getY());
+		System.out.println("Bounds Size: " + bbox.getWidth() + "x" + bbox.getHeight());
 	}
 }

@@ -23,6 +23,8 @@ public class Character {
 	private int y;
 	private Mesh mesh;
 	private ArrayList<Vector2> vertices = new ArrayList<Vector2>();
+	private Player owner = null;
+	private boolean selected = false;
 	
 	public Character(int x, int y, String name, Texture pic, int lev, int currXP, int att, int def, int str, int mag, int hp) {
 		this.name = name;
@@ -101,6 +103,26 @@ public class Character {
 		return mesh;
 	}
 	
+	public Player getOwner() {
+		return owner;
+	}
+	
+	public boolean getSelected() {
+		return selected;
+	}
+	
+	public void setSelected(boolean select) {
+		selected = select;
+	}
+	
+	public void setOwner(Player p) {
+		owner = p;
+	}
+	
+	public void increaseHP(int hp) {
+		this.hp+=hp;
+	}
+	
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -121,7 +143,7 @@ public class Character {
 		vertices.add(new Vector2(this.x+31.5f,this.y));
 	}
 	
-	public boolean hit(int x, int y) {
+	public boolean hit(float x, float y) {
 		if(Intersector.isPointInPolygon(vertices, new Vector2(x,Game.getHeight() - y))) {
 			return true;
 		}

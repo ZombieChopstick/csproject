@@ -16,8 +16,9 @@ public class Deck {
 	private ArrayList<Card> deck;
 	private Rectangle bbox;
 	private Texture cardBackPic;
-	private int x;
-	private int y;
+	private Texture noDeckPic;
+	private float x;
+	private float y;
 	private boolean visible = true;
 	
 	public Deck(int size) {
@@ -25,6 +26,7 @@ public class Deck {
 		
 		AssetManager manager = AssetsManager.getInstance();
 		cardBackPic = manager.get(AssetsManager.CARDBACK,Texture.class);
+		noDeckPic = manager.get(AssetsManager.CARDNONE,Texture.class);
 		x = Game.getWidth()-cardBackPic.getWidth()-20;
 		y = 0;
 		bbox = new Rectangle(x,y,cardBackPic.getWidth(),cardBackPic.getHeight());
@@ -36,11 +38,15 @@ public class Deck {
 		return cardBackPic;
 	}
 	
-	public int getX() {
+	public Texture getNoDeckPic() {
+		return noDeckPic;
+	}
+	
+	public float getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 	
@@ -102,9 +108,11 @@ public class Deck {
 	}
 	
 	public void resize(int width, int height) {
-		x = width-cardBackPic.getWidth()-20;
+		x = width-(cardBackPic.getWidth()*(width/1920f))-20;
 		y = 0;
 		bbox.setX(x);
 		bbox.setY(y);
+		bbox.setWidth(cardBackPic.getWidth()*(width/1920f));
+		bbox.setHeight(cardBackPic.getHeight()*(height/1080f));
 	}
 }

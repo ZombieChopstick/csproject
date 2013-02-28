@@ -19,7 +19,7 @@ public class Player {
 		this.name = name;
 		hand = new Hand();
 		deck = new Deck(30);
-		//discard = new Discard();
+		discard = new Discard(0,0);
 		characters = new ArrayList<Character>();
 		id = nextID;
 		nextID++;

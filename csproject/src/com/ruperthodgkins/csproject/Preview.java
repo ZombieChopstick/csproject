@@ -4,14 +4,14 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Preview {
-	private int x;
-	private int y;
+	private float x;
+	private float y;
 	private Texture previewCardPic;
 	private AssetManager manager;
 	private String chInfo = "";
 	private static Preview instance;
 	
-	public Preview() {
+	private Preview() {
 		manager = AssetsManager.getInstance();
 		previewCardPic = manager.get(AssetsManager.CARDNONE);
 		x = Game.getWidth()-previewCardPic.getWidth()-20;
@@ -29,11 +29,10 @@ public class Preview {
 		if(tex!=null) {
 			previewCardPic = tex;
 			if(c!=null) {
-				chInfo = "Name: " + c.getName() + "\nHP: " + c.getHP() + "\nXP: " + c.getXP();
-				System.out.println(chInfo);
+				chInfo = c.getName() + "\nHP: " + c.getHP() + "\nXP: " + c.getXP() + "\nOwner: " + c.getOwner().getName();
 			}
 		}
-		else {
+		else if(tex==null && c==null) {
 			previewCardPic = manager.get(AssetsManager.CARDNONE);
 			chInfo = "";
 		}
@@ -43,11 +42,11 @@ public class Preview {
 		return previewCardPic;
 	}
 	
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 	
@@ -56,8 +55,8 @@ public class Preview {
 	}
 	
 	public void resize(int width, int height) {
-		x = width-previewCardPic.getWidth()-20;
-		y = height-(previewCardPic.getHeight()+100);
+		x = width-(previewCardPic.getWidth()*(width/1920f))-20;
+		y = height-(previewCardPic.getHeight()*(height/1080f)+160*(height/1080f));
 	}
 
 	public void setCharacterInformation(String info) {

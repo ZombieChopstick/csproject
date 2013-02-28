@@ -14,6 +14,7 @@ public class Board {
 	private int y;
 	private AssetManager manager = AssetsManager.getInstance();
 	private Preview preview = Preview.getInstance();
+	private boolean characterSelected = false;
 	
 	public Board(int x, int y) {
 		characters = new HashMap<Vector2,Character>();
@@ -30,12 +31,21 @@ public class Board {
 		return new Vector2(board.get(coords).getX(),board.get(coords).getY());
 	}
 	
+	public boolean isCharacterSelected() {
+		return characterSelected;
+	}
+	
 	public void addCharacter(Vector2 coord, Character c) {
-		characters.put(coord, c); 
+		characters.put(coord, c);
+		c.getOwner().getCharacters().add(c);
 	}
 	
 	public void removeCharacter(Vector2 coord) {
 		
+	}
+	
+	public HashMap<Vector2,Character> getCharacters() {
+		return characters;
 	}
 	
 	public void resize(int width, int height) {
@@ -77,12 +87,20 @@ public class Board {
 	
 	public void update() {
 		for(Character c : characters.values()) {
-			if(c.hit(Gdx.input.getX(),Gdx.input.getY()) && Gdx.input.justTouched()) {
-				preview.setCardPic(manager.get(AssetsManager.CARDCHARGUARD,Texture.class),c);
+			if(c.hit(Gdx.input.getX(),Gdx.input.getY())) {
+				if(Gdx.input.justTouched()) {
+					c.setSelected(!c.getSelected());
+					characterSelected = !characterSelected;
+				}
+				preview.setCardPic((Texture) manager.get(AssetsManager.CARDCHARGUARD),c);
+				break;
 			}
 			else {
-				//preview.setCardPic(null, null);
+				if(c.getSelected()) break;
+				else {
+				preview.setCardPic(null, null);
 				preview.setCharacterInformation("");
+				}
 			}
 		}
 	}

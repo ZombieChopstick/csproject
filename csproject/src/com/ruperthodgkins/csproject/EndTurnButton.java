@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 public class EndTurnButton {
-	private int x;
-	private int y;
+	private float x;
+	private float y;
 	private Rectangle bbox;
 	private Texture buttonPic;
 	
-	public EndTurnButton(int x, int y) {
+	public EndTurnButton(float x, float y) {
 		AssetManager manager = AssetsManager.getInstance();
 		buttonPic = manager.get(AssetsManager.BUTTONENDTURN,Texture.class);
 		this.x = x;
@@ -23,15 +23,15 @@ public class EndTurnButton {
 		return buttonPic;
 	}
 	
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 	
-	public boolean hit(int x, int y) {
+	public boolean hit(float x, float y) {
 		if(bbox.contains(x,Gdx.graphics.getHeight() - y)) {
 			return true;
 		}
@@ -39,9 +39,13 @@ public class EndTurnButton {
 	}
 	
 	public void resize(int width, int height) {
-		x = width-327;
-		y = 434;
+		//x = width-327;
+		//y = 434;
+		x = width-(buttonPic.getWidth()*(width/1920f))-20;
+		y = 434 * (height/1080f);
 		bbox.x = x;
 		bbox.y = y;
+		bbox.setWidth(buttonPic.getWidth()*Game.getWidth()/1920f);
+		bbox.setHeight(buttonPic.getHeight()*Game.getHeight()/1080f);
 	}
 }
