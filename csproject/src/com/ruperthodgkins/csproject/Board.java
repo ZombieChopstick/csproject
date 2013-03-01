@@ -15,12 +15,25 @@ public class Board {
 	private AssetManager manager = AssetsManager.getInstance();
 	private Preview preview = Preview.getInstance();
 	private boolean characterSelected = false;
+	private Character holdingCharacter;
+	private boolean rememberLastPosition = false;
+	private float lastCharX;
+	private float lastCharY;
+	private static boolean characterMoved = false;
 	
 	public Board(int x, int y) {
 		characters = new HashMap<Vector2,Character>();
 		board = new HashMap<Vector2,BoardHex>();
 		this.x = x;
 		this.y = y;
+	}
+	
+	public static boolean getCharacterMoved() {
+		return characterMoved;
+	}
+	
+	public static void setCharacterMoved(boolean moved) {
+		characterMoved = false;
 	}
 	
 	public HashMap<Vector2,BoardHex> getBoard() {
@@ -88,20 +101,49 @@ public class Board {
 	public void update() {
 		for(Character c : characters.values()) {
 			if(c.hit(Gdx.input.getX(),Gdx.input.getY())) {
-				if(Gdx.input.justTouched()) {
+				/*if(Gdx.input.justTouched()) {
 					c.setSelected(!c.getSelected());
 					characterSelected = !characterSelected;
+					holdingCharacter = c;
+				}*/
+				if(Gdx.input.isTouched()) {
+					if(holdingCharacter == null) {
+						lastCharX = c.getX();
+						lastCharY = c.getY();
+						rememberLastPosition = true;
+						c.setPosition(Gdx.input.getX()-(c.getCharPic().getWidth()*(Game.getWidth()/1920f)/2)-10, Game.getHeight()-Gdx.input.getY()-(c.getCharPic().getHeight()*(Game.getHeight()/1080f)/2)-10);
+						holdingCharacter = c;
+					}
+					else {
+						holdingCharacter.setPosition(Gdx.input.getX()-(holdingCharacter.getCharPic().getWidth()*(Game.getWidth()/1920f)/2)-10, Game.getHeight()-Gdx.input.getY()-(holdingCharacter.getCharPic().getHeight()*(Game.getHeight()/1080f)/2)-10);
+					}
+				}
+				else {
+					for(BoardHex hex : board.values()) {
+						if(holdingCharacter!=null && hex.hit(Gdx.input.getX(),Gdx.input.getY())) {
+							System.out.println(hex.getCoordinates());
+							holdingCharacter.setPosition(hex.getX(), hex.getY());
+							rememberLastPosition = false;
+							characters.values().remove(holdingCharacter);
+							characters.put(hex.getCoordinates(), holdingCharacter);
+							if(hex.getX() != lastCharX && hex.getY() != lastCharY)
+								characterMoved  = true;
+							break;
+						}
+					}
+					if(rememberLastPosition) {
+						c.setPosition(lastCharX, lastCharY);
+						rememberLastPosition = false;
+					}
+					holdingCharacter = null;
 				}
 				preview.setCardPic((Texture) manager.get(AssetsManager.CARDCHARGUARD),c);
 				break;
 			}
 			else {
-				if(c.getSelected()) break;
-				else {
 				preview.setCardPic(null, null);
 				preview.setCharacterInformation("");
-				}
 			}
-		}
+		}		
 	}
 }

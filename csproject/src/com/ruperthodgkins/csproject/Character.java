@@ -18,9 +18,10 @@ public class Character {
 	private int strength;
 	private int magic;
 	private int hp;
+	private int maxHP;
 	private Texture charPic;
-	private int x;
-	private int y;
+	private float x;
+	private float y;
 	private Mesh mesh;
 	private ArrayList<Vector2> vertices = new ArrayList<Vector2>();
 	private Player owner = null;
@@ -38,6 +39,7 @@ public class Character {
 		charPic = pic;
 		this.x = x;
 		this.y = y;
+		maxHP = level * 51 - (level*level);
 		mesh = new Mesh(true,6,6,new VertexAttribute(Usage.Position,3,"a_position")); 
 		float[] v = { this.x, this.y+18f, 0, 
 				   this.x, this.y + 54f, 0, 
@@ -86,21 +88,29 @@ public class Character {
 	public int getHP() {
 		return hp;
 	}
+	
+	public int getMaxHP() {
+		return maxHP;
+	}
 
 	public Texture getCharPic() {
 		return charPic;
 	}
 	
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 	
 	public Mesh getMesh() {
 		return mesh;
+	}
+	
+	public ArrayList<Vector2> getVertices() {
+		return vertices;
 	}
 	
 	public Player getOwner() {
@@ -123,7 +133,7 @@ public class Character {
 		this.hp+=hp;
 	}
 	
-	public void setPosition(int x, int y) {
+	public void setPosition(float x, float y) {
 		this.x = x;
 		this.y = y;
 		float[] v = { this.x, this.y+18f, 0, 

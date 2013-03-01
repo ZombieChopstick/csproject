@@ -120,6 +120,8 @@ public class GameScreen implements Screen {
 		batch.draw(turns.getCurrentPlayer().getDiscardPile().getDiscardPic(), turns.getCurrentPlayer().getDiscardPile().getX(), turns.getCurrentPlayer().getDiscardPile().getY(), turns.getCurrentPlayer().getDiscardPile().getDiscardPic().getWidth()*(Game.getWidth()/1920f), turns.getCurrentPlayer().getDiscardPile().getDiscardPic().getHeight()*(Game.getHeight()/1080f));
 		batch.setColor(Color.WHITE);
 		
+		font.drawMultiLine(batch, "Game Time: " + turns.getGameTime(), preview.getX()-preview.getCardPic().getWidth()*(Game.getWidth()/1920f), preview.getY()-50*(Game.getHeight()/1920f), preview.getCardPic().getWidth()*(Game.getWidth()/1920f)-25*(Game.getWidth()/1920f), BitmapFont.HAlignment.CENTER);
+		
 		//RENDER PREVIEW
 		batch.draw(preview.getCardPic(), preview.getX(), preview.getY(), preview.getCardPic().getWidth()*(Game.getWidth()/1920f), preview.getCardPic().getHeight()*(Game.getHeight()/1080f));
 		if(turns.getCurrentPlayer().getHand().getHoldingCard() == null) {

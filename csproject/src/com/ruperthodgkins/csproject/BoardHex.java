@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 public class BoardHex {
@@ -72,10 +73,31 @@ public class BoardHex {
 		selected = !selected;
 	}
 	
-	public boolean hit(int x, int y) {
+	public boolean hit(float x, float y) {
 		if(Intersector.isPointInPolygon(vertices, new Vector2(x,Game.getHeight() - y))) {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean hit(ArrayList<Vector2> vert) {
+		float chvertices[] = new float[12];
+		int i = 0;
+		for(Vector2 v : vert) {
+			chvertices[i] = v.x;
+			chvertices[i++] = v.y;
+			i++;
+		}
+		float hexvertices[] = new float[12];
+		i=0;
+		for(Vector2 v: vertices) {
+			hexvertices[i] = v.x;
+			hexvertices[i++] = v.y;
+			i++;
+		}
+		if(Intersector.overlapConvexPolygons(new Polygon(hexvertices), new Polygon(chvertices)))
+			return true;
+		else
+			return false;
 	}
 }

@@ -29,7 +29,7 @@ public class Preview {
 		if(tex!=null) {
 			previewCardPic = tex;
 			if(c!=null) {
-				chInfo = c.getName() + "\nHP: " + c.getHP() + "\nXP: " + c.getXP() + "\nOwner: " + c.getOwner().getName();
+				chInfo = c.getName() + "\nHP: " + c.getHP() + "/" + c.getMaxHP() + "\nXP: " + c.getXP() + "\nOwner: " + c.getOwner().getName();
 			}
 		}
 		else if(tex==null && c==null) {

@@ -50,7 +50,22 @@ public class Hand {
 	}
 	
 	public boolean removeCard(Card c) {
-		return hand.remove(c);
+		if(c!=null) {
+			hand.remove(c);
+			int index = 1;
+			lastX = 40;
+			int inc = 1;
+			for(Card card : hand) {
+				card.setZIndex(index);
+				index+=inc;
+				card.setPosition(lastX, 0);
+				lastX+=50;
+			}
+			holdingCard = null;
+			return true;
+		}
+		return false;
+		
 	}
 	
 	/*public void bringCardForward(Card c) {
