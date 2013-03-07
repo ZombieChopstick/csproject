@@ -30,13 +30,13 @@ public class LoadingScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		sprite.draw(batch);
 		batch.setProjectionMatrix(batch.getProjectionMatrix().setToOrtho2D(0, 0, Game.getWidth(),  Game.getHeight()));
-		font.setColor(Color.BLACK);
+		font.setColor(Color.WHITE);
 		font.setScale(2);
 		
 		if(manager.update()) {

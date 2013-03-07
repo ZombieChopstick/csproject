@@ -8,9 +8,16 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "CS Project";
 		cfg.useGL20 = false;
-		cfg.width = 1280;
-		cfg.height = 720;
-		cfg.fullscreen = false;
+		if(args.length > 0) {
+			cfg.width = Integer.parseInt(args[0]);
+			cfg.height = Integer.parseInt(args[1]);
+			cfg.fullscreen = Boolean.parseBoolean(args[2]);
+		}
+		else {
+			cfg.width = 1280;
+			cfg.height = 720;
+			cfg.fullscreen = false;
+		}
 		cfg.resizable = true;
 		
 		new LwjglApplication(new Game(), cfg);
