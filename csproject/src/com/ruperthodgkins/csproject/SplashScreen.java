@@ -39,7 +39,7 @@ public class SplashScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		System.out.println(alpha);
+		//System.out.println(alpha);
 		if(fadedOut) main.setScreen(new LoadingScreen(main));
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
