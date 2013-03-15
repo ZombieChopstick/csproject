@@ -18,6 +18,7 @@ public class AssetsManager {
 	public static final String HEXGREENHOVER = "data/hexhover.png";
 	
 	public static final String CHARGUARD = "data/guard.png";
+	public static final String CHARGUARDRED = "data/guard_red.png";
 	
 	private AssetsManager() {
 		

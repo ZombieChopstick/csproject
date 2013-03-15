@@ -13,6 +13,7 @@ public class Hand {
 	private float lastCardY;
 	private boolean rememberLastCardPosition = false;
 	private Preview preview = Preview.getInstance();
+	private boolean mouseHeld = false;
 	
 	public Hand() {
 		hand = new ArrayList<Card>();
@@ -76,6 +77,19 @@ public class Hand {
 			}
 		}
 	}*/
+	
+	public boolean mouseButtonReleased() {
+		if(mouseHeld == false) {
+			mouseHeld = Gdx.input.isTouched();
+		}
+		else {
+			if(Gdx.input.isTouched() == false) {
+				mouseHeld = false;
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public void update() {
 		ArrayList<Card> possibleHits = new ArrayList<Card>();

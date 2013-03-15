@@ -29,9 +29,9 @@ public class Discard {
 		return y;
 	}
 	
-	public void addCard(Card c) {
-		discardPile.add(0,c);
-		discardPic = c.getCardPic();
+	public void addCard(Card card) {
+		discardPile.add(0,card);
+		discardPic = card.getCardPic();
 	}
 	
 	public void resize(int width, int height) {

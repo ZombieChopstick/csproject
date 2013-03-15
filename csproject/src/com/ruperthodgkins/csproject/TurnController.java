@@ -12,7 +12,7 @@ public class TurnController {
 	private int fieldCharacterSpaces = 0;
 	private int cardLimit = 1;
 	private int numberOfCardsPlayed = 0;
-	private boolean attackedOpponent = true;
+	private boolean attackedOpponent = false;
 	private Card cardToRemove = null;
 	private Timer gameTimer;
 	
@@ -68,10 +68,12 @@ public class TurnController {
 		numberOfCardsPlayed = 0;
 		movedCharacterInBattle = false;
 		Board.setCharacterMoved(false);
+		Board.setCanMoveCharacter(false);
 	}
 	
 	public void update() {
 		Player p = currentPlayer;
+		Board.setControllingPlayer(p);
 		if(p.getMissTurn()) {
 			p.setMissTurn(false);
 			//break;
@@ -87,6 +89,7 @@ public class TurnController {
 				}
 				p.setFirstTurn(false);
 				drawnCard = true;
+				Board.setCanMoveCharacter(true);
 			}
 			
 		}
@@ -97,6 +100,7 @@ public class TurnController {
 					Card c = p.getDeck().drawCard();
 					p.getHand().addCard(c);
 					drawnCard = true;
+					Board.setCanMoveCharacter(true);
 				}
 				else {
 					p.getDeck().hide();
@@ -133,6 +137,15 @@ public class TurnController {
 			//move character in battle
 			if(Board.getCharacterMoved()) {
 				movedCharacterInBattle = true;
+				numberOfCardsPlayed = cardLimit;
+				Board.setCanAttackCharacter(true);
+			}
+		}
+		
+		if(!attackedOpponent) {
+			if(Board.getCharacterAttacked()) {
+				attackedOpponent = true;
+				Board.setCanAttackCharacter(false);
 			}
 		}
 		

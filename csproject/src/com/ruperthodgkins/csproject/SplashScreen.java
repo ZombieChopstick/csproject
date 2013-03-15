@@ -2,6 +2,7 @@ package com.ruperthodgkins.csproject;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -49,6 +50,11 @@ public class SplashScreen implements Screen {
 		if(!fadedIn) fadeIn(delta);
 		else fadeOut(delta);
 		batch.end();
+		
+		//SKIP SCREEN
+		if(Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+			main.setScreen(new LoadingScreen(main));
+		}
 	}
 
 	@Override

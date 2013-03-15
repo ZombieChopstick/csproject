@@ -62,15 +62,22 @@ public class BoardHex {
 	}
 	
 	public Texture getHexPic() {
-		return hexPic;
+		if(!selected) {
+			return hexPic;
+		}
+		return hexHoverPic;
 	}
 	
 	public Texture getHexHoverPic() {
 		return hexHoverPic;
 	}
 	
-	public void select() {
-		selected = !selected;
+	public boolean isSelected() {
+		return selected;
+	}
+	
+	public void setSelected(boolean select) {
+		selected = select;
 	}
 	
 	public boolean hit(float x, float y) {

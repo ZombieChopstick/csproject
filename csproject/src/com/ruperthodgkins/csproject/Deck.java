@@ -1,8 +1,11 @@
 package com.ruperthodgkins.csproject;
 
+import java.beans.XMLEncoder;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +53,10 @@ public class Deck {
 		return y;
 	}
 	
+	public ArrayList<Card> getDeck() {
+		return deck;
+	}
+	
 	public int getCardsRemaining() {
 		return deck.size();
 	}
@@ -67,8 +74,8 @@ public class Deck {
 		return null;
 	}
 	
-	public void addCard(Card c) {
-		deck.add(c);
+	public void addCard(Card potionCard) {
+		deck.add(potionCard);
 	}
 	
 	public void loadDeck(String file) {
@@ -83,6 +90,20 @@ public class Deck {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveDeck(String file) {
+		try {
+			XMLEncoder e = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(file)));
+			for(Card c:deck) {
+				e.writeObject(c);
+				e.flush();
+			}
+			e.close();
+			System.out.println("Saved Deck");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

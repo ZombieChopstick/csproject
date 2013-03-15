@@ -20,11 +20,10 @@ public class GameScreen implements Screen {
 	private AssetManager manager = AssetsManager.getInstance();
 	@SuppressWarnings("unused")
 	private Game main;
-	private Card potionCard;
 	private BitmapFont font;	
-	private Character[] chars = new Character[6];
-	private Player player1 = new Player("Rupert");
-	private Player player2 = new Player("Adam");
+	private Character[] chars = new Character[12];
+	private Player player1 = new Player();
+	private Player player2 = new Player();
 	private TurnController turns = new TurnController(player1, player2);
 	private EndTurnButton btnEndTurn = new EndTurnButton(turns.getCurrentPlayer().getDeck().getX(),turns.getCurrentPlayer().getDeck().getY()+434);
 	private Board board;
@@ -76,12 +75,9 @@ public class GameScreen implements Screen {
 		//RENDER BOARD
 		for(BoardHex hex : board.getBoard().values()) {
 			if(hex.hit(Gdx.input.getX(),Gdx.input.getY())) {
-				batch.draw(hex.getHexHoverPic(), hex.getX(), hex.getY(), hex.getHexPic().getWidth(), hex.getHexPic().getHeight());
 				font.draw(batch, "Co-ordinates: " + hex.getCoordinates(), Game.getWidth()-180, Game.getHeight()-70);
 			}
-			else {
-				batch.draw(hex.getHexPic(), hex.getX(), hex.getY(), hex.getHexPic().getWidth(), hex.getHexPic().getHeight());
-			}
+			batch.draw(hex.getHexPic(), hex.getX(), hex.getY(), hex.getHexPic().getWidth(), hex.getHexPic().getHeight());
 		}
 		
 		//RENDER CHARACTERS ON BOARD
@@ -116,7 +112,7 @@ public class GameScreen implements Screen {
 		}
 		
 		//RENDER DISCARD PILE
-		batch.setColor(Color.LIGHT_GRAY);
+		batch.setColor(Color.GRAY);
 		batch.draw(turns.getCurrentPlayer().getDiscardPile().getDiscardPic(), turns.getCurrentPlayer().getDiscardPile().getX(), turns.getCurrentPlayer().getDiscardPile().getY(), turns.getCurrentPlayer().getDiscardPile().getDiscardPic().getWidth()*(Game.getWidth()/1920f), turns.getCurrentPlayer().getDiscardPile().getDiscardPic().getHeight()*(Game.getHeight()/1080f));
 		batch.setColor(Color.WHITE);
 		
@@ -182,17 +178,28 @@ public class GameScreen implements Screen {
 		
 		//POPULATE WITH DEMO DATA
 		for(int i = 0; i<10; i++) {
-			potionCard = new Card("Potion", manager.get(AssetsManager.CARDPOTION, Texture.class));
+			//potionCard = new Card("Potion", manager.get(AssetsManager.CARDPOTION, Texture.class));
+			Card potionCard = new Card();
+			potionCard.setName("Potion");
+			potionCard.setCardPic((Texture)manager.get(AssetsManager.CARDPOTION));
+			//potionCard.setOwner(player1);
 			player1.getDeck().addCard(potionCard);
 		}
+		player1.getDeck().saveDeck("deck.xml");
 		for(int i = 0; i<10; i++) {
-			potionCard = new Card("Potion", manager.get(AssetsManager.CARDPOTION, Texture.class));
+			//potionCard = new Card("Potion", manager.get(AssetsManager.CARDPOTION, Texture.class));
+			Card potionCard = new Card();
+			potionCard.setName("Potion");
+			potionCard.setCardPic((Texture)manager.get(AssetsManager.CARDPOTION));
+			//potionCard.setOwner(player2);
 			player2.getDeck().addCard(potionCard);
 		}
 		
+		player1.setName("Rupert");
+		player2.setName("Adam");
 		board = new Board(200,Game.getHeight()-80);
 		board.setupBoard(11);
-		Vector2[] pos = new Vector2[6];
+		Vector2[] pos = new Vector2[12];
 		pos[0] = new Vector2(0,0);
 		pos[1] = new Vector2(0,3);
 		pos[2] = new Vector2(0,5);
@@ -204,12 +211,26 @@ public class GameScreen implements Screen {
 			//hexs[i] = new Character(200+(i*63),Game.getHeight()-100,"Guard " + (i+1),manager.get(AssetsManager.CHARGUARD,Texture.class), 1, 0, 0, 0, 0, 0, 0);
 			chars[i] = new Character((int)board.getPosition(pos[i]).x,(int)board.getPosition(pos[i]).y,"Guard " + (i+1),manager.get(AssetsManager.CHARGUARD,Texture.class), 1, 0, 0, 0, 0, 0, 50);
 			chars[i].setOwner(player1);
+			chars[i].setCharacterType(CharacterType.GUARD);
+			board.addCharacter(pos[i], chars[i]);
+		}
+		
+		pos[6] = new Vector2(10,0);
+		pos[7] = new Vector2(9,3);
+		pos[8] = new Vector2(8,5);
+		pos[9] = new Vector2(7,0);
+		pos[10] = new Vector2(7,3);
+		pos[11] = new Vector2(5,8);
+		
+		for(int i=6; i<=11; i++) {
+			//hexs[i] = new Character(200+(i*63),Game.getHeight()-100,"Guard " + (i+1),manager.get(AssetsManager.CHARGUARD,Texture.class), 1, 0, 0, 0, 0, 0, 0);
+			chars[i] = new Character((int)board.getPosition(pos[i]).x,(int)board.getPosition(pos[i]).y,"Guard " + (i+1),manager.get(AssetsManager.CHARGUARDRED,Texture.class), 1, 0, 0, 0, 0, 0, 50);
+			chars[i].setOwner(player2);
+			chars[i].setCharacterType(CharacterType.GUARD);
 			board.addCharacter(pos[i], chars[i]);
 		}
 		
 		preview = Preview.getInstance();
-		//guard1 = new Character(800,400,"Guard 1",manager.get("data/hex.png",Texture.class), 1, 0, 0, 0, 0, 0, 0);
-		//guard2 = new Character(863,400,"Guard 1",manager.get("data/hex.png",Texture.class), 1, 0, 0, 0, 0, 0, 0);
 	}
 
 	@Override

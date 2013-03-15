@@ -80,6 +80,7 @@ public class LoadingScreen implements Screen {
 		manager.load(AssetsManager.HEXGREENHOVER,Texture.class);
 		manager.load(AssetsManager.BUTTONENDTURN,Texture.class);
 		manager.load(AssetsManager.CHARGUARD,Texture.class);
+		manager.load(AssetsManager.CHARGUARDRED,Texture.class);
 		
 		texture = new Texture(Gdx.files.internal("data/loadingcircle.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);

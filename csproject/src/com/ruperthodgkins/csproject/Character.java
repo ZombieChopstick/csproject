@@ -26,6 +26,7 @@ public class Character {
 	private ArrayList<Vector2> vertices = new ArrayList<Vector2>();
 	private Player owner = null;
 	private boolean selected = false;
+	private CharacterType type;
 	
 	public Character(int x, int y, String name, Texture pic, int lev, int currXP, int att, int def, int str, int mag, int hp) {
 		this.name = name;
@@ -151,6 +152,14 @@ public class Character {
 		vertices.add(new Vector2(this.x+63f,this.y+54f));
 		vertices.add(new Vector2(this.x+63f,this.y+18f));
 		vertices.add(new Vector2(this.x+31.5f,this.y));
+	}
+	
+	public void setCharacterType(CharacterType type) {
+		this.type = type;
+	}
+	
+	public CharacterType getCharacterType() {
+		return type;
 	}
 	
 	public boolean hit(float x, float y) {

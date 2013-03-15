@@ -6,7 +6,7 @@ public class Player {
 	private Hand hand;
 	private Deck deck;
 	private Discard discard;
-	private ArrayList<Character> characters;
+	private ArrayList<Character> myCharacters;
 	private static int nextID = 0;
 	private int id;
 	private String name;
@@ -15,12 +15,11 @@ public class Player {
 	private boolean endTurn = false;
 	private boolean turnStarted = false;
 	
-	public Player(String name) {
-		this.name = name;
+	public Player() {
 		hand = new Hand();
 		deck = new Deck(30);
 		discard = new Discard(0,0);
-		characters = new ArrayList<Character>();
+		myCharacters = new ArrayList<Character>();
 		id = nextID;
 		nextID++;
 	}
@@ -33,8 +32,16 @@ public class Player {
 		return name;
 	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public ArrayList<Character> getCharacters() {
-		return characters;
+		return myCharacters;
+	}
+	
+	public void setCharacters(ArrayList<Character> characters) {
+		myCharacters = characters;
 	}
 	
 	public Hand getHand() {
