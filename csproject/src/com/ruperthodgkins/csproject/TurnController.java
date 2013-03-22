@@ -15,17 +15,29 @@ public class TurnController {
 	private boolean attackedOpponent = false;
 	private Card cardToRemove = null;
 	private Timer gameTimer;
+	private boolean mouseHeld = false;
+	private GameEvents gameEvents = GameEvents.getInstance();
+	private boolean eventsAdded = false;
 	
 	public TurnController(Player p1, Player p2) {
 		players.add(p1);
 		players.add(p2);
 		currentPlayer = p1;
-		gameTimer = new Timer();
+		gameTimer = Timer.getInstance();
 		gameTimer.start();
 	}
 	
 	public Player getCurrentPlayer() {
 		return currentPlayer;
+	}
+	
+	public Player getOppositionPlayer() {
+		for(Player p : getPlayers()) {
+			if(p != currentPlayer) {
+				return p;
+			}
+		}
+		return null;
 	}
 	
 	public Player getPlayer(String name) {
@@ -35,6 +47,10 @@ public class TurnController {
 			}
 		}
 		return null;
+	}
+	
+	public Player getPlayer(int number) {
+		return players.get(number);
 	}
 	
 	public ArrayList<Player> getPlayers() {
@@ -56,6 +72,12 @@ public class TurnController {
 	}
 	
 	public void switchPlayer(Player current) {
+//		for(Character c : current.getCharacters()) {
+//			c.setSelected(false);
+//		}
+		eventsAdded = false;
+		if(eventsAdded==false) gameEvents.addEvent(gameTimer.getGameTime() + ": " + "End of " + currentPlayer.getName() + "\'s turn\n------------------");
+		eventsAdded = true;
 		try {
 			System.out.println("switching players");
 			Thread.sleep(250);
@@ -67,22 +89,54 @@ public class TurnController {
 		drawnCard = false;
 		numberOfCardsPlayed = 0;
 		movedCharacterInBattle = false;
+		attackedOpponent = false;
 		Board.setCharacterMoved(false);
 		Board.setCanMoveCharacter(false);
+		Board.setCharacterAttacked(false);
+		Board.setCanAttackCharacter(false);
+		eventsAdded = false;
+	}
+	
+	public boolean mouseButtonReleased() {
+		if(mouseHeld  == false) {
+			mouseHeld = Gdx.input.justTouched();
+		}
+		else {
+			if(Gdx.input.isTouched() == false) {
+				mouseHeld = false;
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void update() {
+		//System.out.println(currentPlayer.getName() + " Phases:\tDrawn Card: " + drawnCard +"\tMoved Piece: " + movedCharacterInBattle + "\tAttacked Piece: " + attackedOpponent);
 		Player p = currentPlayer;
 		Board.setControllingPlayer(p);
+		Board.setOpposingPlayer(getOppositionPlayer());
+		
+		if(currentPlayer.getCharacters().size() == 0) {
+			System.out.println(currentPlayer.getName() + "loses");
+			System.out.println(getOppositionPlayer().getName() + "wins");
+			System.exit(0);
+		}
+		
 		if(p.getMissTurn()) {
 			p.setMissTurn(false);
 			//break;
 		}
+				
 		//wait for player to draw card
 		if(p.getFirstTurn() && drawnCard == false) {
+			if(eventsAdded==false) gameEvents.addEvent(gameTimer.getGameTime() + ": Waiting for " + currentPlayer.getName() + " to draw 5 cards from the deck.");
+			eventsAdded = true;
 			p.startTurn();
 			p.getDeck().shuffle();
-			if(p.getDeck().hit(Gdx.input.getX(), Gdx.input.getY()) && Gdx.input.justTouched()) {
+			if(p.getDeck().hit(Gdx.input.getX(), Gdx.input.getY()) && mouseButtonReleased()) {
+				eventsAdded = false;
+				if(eventsAdded==false) gameEvents.addEvent(gameTimer.getGameTime() + ": " + currentPlayer.getName() + " has drawn 5 cards.");
+				eventsAdded = true;
 				for(int i = 0; i<5; i++) {
 					Card c = p.getDeck().drawCard();
 					p.getHand().addCard(c);
@@ -91,19 +145,28 @@ public class TurnController {
 				drawnCard = true;
 				Board.setCanMoveCharacter(true);
 			}
-			
 		}
 		else if(drawnCard == false) {
+			if(eventsAdded==false) gameEvents.addEvent(gameTimer.getGameTime() + ": Waiting for " + currentPlayer.getName() + " to draw a card from the deck.");
+			eventsAdded = true;
 			p.startTurn();
-			if(p.getDeck().hit(Gdx.input.getX(), Gdx.input.getY()) && Gdx.input.justTouched()) {
+			if(p.getDeck().hit(Gdx.input.getX(), Gdx.input.getY()) && mouseButtonReleased()) {
 				if(p.getDeck().getCardsRemaining() > 0) {
+					eventsAdded = false;
+					if(eventsAdded==false) gameEvents.addEvent(gameTimer.getGameTime() + ": " + currentPlayer.getName() + " has drawn a card.");
+					eventsAdded = true;
 					Card c = p.getDeck().drawCard();
 					p.getHand().addCard(c);
 					drawnCard = true;
 					Board.setCanMoveCharacter(true);
 				}
 				else {
+					eventsAdded = false;
+					if(eventsAdded==false) gameEvents.addEvent(gameTimer.getGameTime() + ": " + currentPlayer.getName() + " has no cards left in the deck.");
+					eventsAdded = true;
 					p.getDeck().hide();
+					drawnCard = true;
+					Board.setCanMoveCharacter(true);
 				}
 			}
 		}
@@ -122,9 +185,12 @@ public class TurnController {
 				if(p.getHand().getHoldingCard()!=null) {
 					if (c.hit(Gdx.input.getX(),Gdx.input.getY()) && c.getOwner() == p) {
 						System.out.println("Added 20HP to " + c.getName());
+						eventsAdded = false;
+						if(eventsAdded==false) gameEvents.addEvent(gameTimer.getGameTime() + ": " + currentPlayer.getName() + " applied a " + p.getHand().getHoldingCard().getName()  + " to " + c.getName() + ".");
+						eventsAdded = true;
 						c.increaseHP(20);
-						p.getDiscardPile().addCard(p.getHand().getHoldingCard());
 						cardToRemove = p.getHand().getHoldingCard();
+						p.getDiscardPile().addCard(cardToRemove);
 						numberOfCardsPlayed++;
 						p.getHand().removeCard(cardToRemove);
 					}
@@ -136,6 +202,9 @@ public class TurnController {
 		if(!movedCharacterInBattle) {
 			//move character in battle
 			if(Board.getCharacterMoved()) {
+//				eventsAdded = false;
+//				if(eventsAdded==false) gameEvents.addEvent(gameTimer.getGameTime() + ": " + currentPlayer.getName() + " moved a character.");
+//				eventsAdded = true;
 				movedCharacterInBattle = true;
 				numberOfCardsPlayed = cardLimit;
 				Board.setCanAttackCharacter(true);
@@ -144,6 +213,9 @@ public class TurnController {
 		
 		if(!attackedOpponent) {
 			if(Board.getCharacterAttacked()) {
+//				eventsAdded = false;
+//				if(eventsAdded==false) gameEvents.addEvent(gameTimer.getGameTime() + ": " + currentPlayer.getName() + " attacked a character.");
+//				eventsAdded = true;
 				attackedOpponent = true;
 				Board.setCanAttackCharacter(false);
 			}

@@ -14,7 +14,7 @@ public class Card implements Comparable<Card> {
 	private boolean faceUp = false;
 	private Rectangle bbox = null;
 	private int zIndex = 0;
-	//private Character representsCharacter = null;
+	private Character representsCharacter = null;
 	private Player owner = null;
 	
 	public Card() {
@@ -80,11 +80,12 @@ public class Card implements Comparable<Card> {
 	public float getY() { return this.y; }
 	public float getX() { return this.x; }
 	public int getZIndex() { return zIndex; }
-	//public Character getRepresentsChar() { return representsCharacter; }
+	public Character getRepresentsChar() { return representsCharacter; }
 	
-	/*public void setRepresentingCharacter(Character c) {
+	public void setRepresentingCharacter(Character c) {
 		representsCharacter = c;
-	}*/
+		System.out.println("Representing " + c.getName() + c.getHP());
+	}
 	
 	public void setCardPic(Texture pic) {
 		this.cardPic = pic;

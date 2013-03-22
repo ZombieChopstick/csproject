@@ -72,10 +72,12 @@ public class LoadingScreen implements Screen {
 		font = new BitmapFont();
 	
 		manager.load("data/cat.ogg", Music.class);
+		manager.load("data/music_background.ogg", Music.class);
 		manager.load(AssetsManager.CARDBACK,Texture.class);
 		manager.load(AssetsManager.CARDNONE,Texture.class);
 		manager.load(AssetsManager.CARDPOTION,Texture.class);
 		manager.load(AssetsManager.CARDCHARGUARD,Texture.class);
+		manager.load(AssetsManager.CARDCHARGUARDRED,Texture.class);
 		manager.load(AssetsManager.HEXGREEN,Texture.class);
 		manager.load(AssetsManager.HEXGREENHOVER,Texture.class);
 		manager.load(AssetsManager.BUTTONENDTURN,Texture.class);

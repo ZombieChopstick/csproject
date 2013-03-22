@@ -21,6 +21,16 @@ public class Discard {
 		return discardPic;
 	}
 	
+	public String getDiscardedCharText() {
+		if(discardPile.size()>0) {
+			if(discardPile.get(0).getRepresentsChar()!=null) {
+				Card c = discardPile.get(0);
+				return c.getName() + "\nHP: " + c.getRepresentsChar().getHP() + "/" + c.getRepresentsChar().getMaxHP() + "\nXP: " + c.getRepresentsChar().getXP() + "\nOwner: " + c.getRepresentsChar().getOwner().getName();
+			}
+		}
+		return "";
+	}
+	
 	public float getX() {
 		return x;
 	}

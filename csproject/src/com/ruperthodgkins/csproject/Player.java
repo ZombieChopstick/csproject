@@ -14,6 +14,7 @@ public class Player {
 	private boolean firstTurn = true;
 	private boolean endTurn = false;
 	private boolean turnStarted = false;
+	private String teamColour;
 	
 	public Player() {
 		hand = new Hand();
@@ -26,6 +27,14 @@ public class Player {
 	
 	public int getID() {
 		return id;
+	}
+	
+	public void setTeamColour(String colour) {
+		teamColour = colour;
+	}
+	
+	public String getTeamColour() {
+		return teamColour;
 	}
 	
 	public String getName() {

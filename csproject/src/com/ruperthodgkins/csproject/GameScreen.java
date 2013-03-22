@@ -6,6 +6,7 @@ import java.util.Arrays;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
@@ -28,6 +29,7 @@ public class GameScreen implements Screen {
 	private EndTurnButton btnEndTurn = new EndTurnButton(turns.getCurrentPlayer().getDeck().getX(),turns.getCurrentPlayer().getDeck().getY()+434);
 	private Board board;
 	private Preview preview;
+	private GameEvents gameEvents;
 	
 	public GameScreen(Game m) {
 		main = m;
@@ -68,20 +70,20 @@ public class GameScreen implements Screen {
 		
 		//DEBUGGING
 		font.setColor(Color.WHITE);
-		font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), Game.getWidth()-180, Game.getHeight()-10);
-		font.draw(batch, "Mouse: " + Gdx.input.getX() + "," + Gdx.input.getY(), Game.getWidth()-180, Game.getHeight()-30);
-		font.draw(batch, "Current Player: " + turns.getCurrentPlayer().getName(), Game.getWidth()-180, Game.getHeight()-50);
+		font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 20, Game.getHeight()-10);
+		font.draw(batch, "Mouse: " + Gdx.input.getX() + "," + Gdx.input.getY(), 20, Game.getHeight()-30);
+		font.draw(batch, "Current Player: " + turns.getCurrentPlayer().getName(), 20, Game.getHeight()-50);
 		
 		//RENDER BOARD
 		for(BoardHex hex : board.getBoard().values()) {
 			if(hex.hit(Gdx.input.getX(),Gdx.input.getY())) {
-				font.draw(batch, "Co-ordinates: " + hex.getCoordinates(), Game.getWidth()-180, Game.getHeight()-70);
+				font.draw(batch, "Co-ordinates: " + hex.getCoordinates(), 20, Game.getHeight()-70);
 			}
 			batch.draw(hex.getHexPic(), hex.getX(), hex.getY(), hex.getHexPic().getWidth(), hex.getHexPic().getHeight());
 		}
 		
 		//RENDER CHARACTERS ON BOARD
-		for(Character c : chars) {
+		for(Character c : Board.getCharacters().values()) {
 			batch.draw(c.getCharPic(), c.getX(), c.getY(), c.getCharPic().getWidth(), c.getCharPic().getHeight());
 			if(c.getSelected()) {
 				Sprite select = new Sprite((Texture) manager.get(AssetsManager.HEXGREENHOVER));
@@ -114,6 +116,7 @@ public class GameScreen implements Screen {
 		//RENDER DISCARD PILE
 		batch.setColor(Color.GRAY);
 		batch.draw(turns.getCurrentPlayer().getDiscardPile().getDiscardPic(), turns.getCurrentPlayer().getDiscardPile().getX(), turns.getCurrentPlayer().getDiscardPile().getY(), turns.getCurrentPlayer().getDiscardPile().getDiscardPic().getWidth()*(Game.getWidth()/1920f), turns.getCurrentPlayer().getDiscardPile().getDiscardPic().getHeight()*(Game.getHeight()/1080f));
+		font.drawMultiLine(batch, turns.getCurrentPlayer().getDiscardPile().getDiscardedCharText(), turns.getCurrentPlayer().getDiscardPile().getX()+30, turns.getCurrentPlayer().getDiscardPile().getY()+200*(Game.getHeight()/1080f), turns.getCurrentPlayer().getDiscardPile().getDiscardPic().getWidth()*(Game.getWidth()/1920f)-65, BitmapFont.HAlignment.CENTER);
 		batch.setColor(Color.WHITE);
 		
 		font.drawMultiLine(batch, "Game Time: " + turns.getGameTime(), preview.getX()-preview.getCardPic().getWidth()*(Game.getWidth()/1920f), preview.getY()-50*(Game.getHeight()/1920f), preview.getCardPic().getWidth()*(Game.getWidth()/1920f)-25*(Game.getWidth()/1920f), BitmapFont.HAlignment.CENTER);
@@ -122,8 +125,24 @@ public class GameScreen implements Screen {
 		batch.draw(preview.getCardPic(), preview.getX(), preview.getY(), preview.getCardPic().getWidth()*(Game.getWidth()/1920f), preview.getCardPic().getHeight()*(Game.getHeight()/1080f));
 		if(turns.getCurrentPlayer().getHand().getHoldingCard() == null) {
 			font.setColor(Color.BLACK);
-			font.drawMultiLine(batch, preview.getCharacterInformation(), preview.getX()+30, preview.getY()+300*(Game.getHeight()/1920f), preview.getCardPic().getWidth()*(Game.getWidth()/1920f)-65, BitmapFont.HAlignment.CENTER);
+			font.drawMultiLine(batch, preview.getCharacterInformation(), preview.getX()+30, preview.getY()+200*(Game.getHeight()/1080f), preview.getCardPic().getWidth()*(Game.getWidth()/1920f)-65, BitmapFont.HAlignment.CENTER);
 		}
+		
+		//RENDER GAME EVENTS
+		batch.draw(gameEvents.getBackgroundPic(), gameEvents.getX(), gameEvents.getY(), gameEvents.getBackgroundPic().getWidth()*(Game.getWidth()/1920f), gameEvents.getBackgroundPic().getHeight()*(Game.getHeight()/1080f));
+		font.setColor(Color.WHITE);
+		font.drawWrapped(batch, "Game Events", gameEvents.getX()+20*(Game.getWidth()/1920f), gameEvents.getY()+400*(Game.getHeight()/1080f), gameEvents.getBackgroundPic().getWidth()*(Game.getWidth()/1920f)-35, BitmapFont.HAlignment.CENTER);
+		font.drawWrapped(batch, gameEvents.getEvents(), gameEvents.getX()+20*(Game.getWidth()/1920f), gameEvents.getY()+15*(Game.getHeight()/1080f)+35*gameEvents.displayedEvents(), gameEvents.getBackgroundPic().getWidth()*(Game.getWidth()/1920f)-35, BitmapFont.HAlignment.LEFT);
+		
+		//RENDER TURN CONTROLLER
+		batch.draw((Texture) manager.get(AssetsManager.CHARGUARD), gameEvents.getX(), gameEvents.getY()+330,63, 72);
+		font.draw(batch, "Player 1: " + turns.getPlayer(0).getName(), gameEvents.getX()+ 70, gameEvents.getY()+380);
+		font.draw(batch, "Green Team", gameEvents.getX()+ 70, gameEvents.getY()+360);
+		batch.draw((Texture) manager.get(AssetsManager.CHARGUARDRED), gameEvents.getX()+235, gameEvents.getY()+330,63, 72);
+		font.draw(batch, "Player 2: " + turns.getPlayer(1).getName(), gameEvents.getX()+ 305, gameEvents.getY()+380);
+		font.draw(batch, "Red Team", gameEvents.getX()+ 305, gameEvents.getY()+360);
+		
+		font.draw(batch, "It is currently " + turns.getCurrentPlayer().getName() + "\'s turn.", gameEvents.getX()+ 130, gameEvents.getY()+325);
 		
 		//RENDER END TURN BUTTON
 		batch.draw(btnEndTurn.getButtonPic(), btnEndTurn.getX(), btnEndTurn.getY(), btnEndTurn.getButtonPic().getWidth()*(Game.getWidth()/1920f), btnEndTurn.getButtonPic().getHeight()*(Game.getHeight()/1080f));
@@ -162,6 +181,7 @@ public class GameScreen implements Screen {
 		btnEndTurn.resize(width, height);
 		board.resize(width, height);
 		preview.resize(width, height);
+		gameEvents.resize(width, height);
 		/*currentWidth = width;
 		currentHeight = height;
 		System.out.println(currentWidth + "x" + currentHeight);
@@ -185,7 +205,6 @@ public class GameScreen implements Screen {
 			//potionCard.setOwner(player1);
 			player1.getDeck().addCard(potionCard);
 		}
-		player1.getDeck().saveDeck("deck.xml");
 		for(int i = 0; i<10; i++) {
 			//potionCard = new Card("Potion", manager.get(AssetsManager.CARDPOTION, Texture.class));
 			Card potionCard = new Card();
@@ -196,16 +215,24 @@ public class GameScreen implements Screen {
 		}
 		
 		player1.setName("Rupert");
+		player1.setTeamColour("green");
 		player2.setName("Adam");
+		player2.setTeamColour("red");
 		board = new Board(200,Game.getHeight()-80);
 		board.setupBoard(11);
 		Vector2[] pos = new Vector2[12];
+//		pos[0] = new Vector2(0,0);
+//		pos[1] = new Vector2(0,3);
+//		pos[2] = new Vector2(0,5);
+//		pos[3] = new Vector2(2,0);
+//		pos[4] = new Vector2(2,3);
+//		pos[5] = new Vector2(4,8);
 		pos[0] = new Vector2(0,0);
-		pos[1] = new Vector2(0,3);
-		pos[2] = new Vector2(0,5);
-		pos[3] = new Vector2(2,0);
-		pos[4] = new Vector2(2,3);
-		pos[5] = new Vector2(4,8);
+		pos[1] = new Vector2(0,1);
+		pos[2] = new Vector2(0,2);
+		pos[3] = new Vector2(0,3);
+		pos[4] = new Vector2(0,4);
+		pos[5] = new Vector2(0,5);
 		
 		for(int i=0; i<=5; i++) {
 			//hexs[i] = new Character(200+(i*63),Game.getHeight()-100,"Guard " + (i+1),manager.get(AssetsManager.CHARGUARD,Texture.class), 1, 0, 0, 0, 0, 0, 0);
@@ -214,13 +241,20 @@ public class GameScreen implements Screen {
 			chars[i].setCharacterType(CharacterType.GUARD);
 			board.addCharacter(pos[i], chars[i]);
 		}
-		
-		pos[6] = new Vector2(10,0);
-		pos[7] = new Vector2(9,3);
-		pos[8] = new Vector2(8,5);
-		pos[9] = new Vector2(7,0);
-		pos[10] = new Vector2(7,3);
-		pos[11] = new Vector2(5,8);
+//		
+//		pos[6] = new Vector2(10,0);
+//		pos[6] = new Vector2(10,0);
+//		pos[7] = new Vector2(9,3);
+//		pos[8] = new Vector2(8,5);
+//		pos[9] = new Vector2(7,0);
+//		pos[10] = new Vector2(7,3);
+//		pos[11] = new Vector2(5,8);
+		pos[6] = new Vector2(1,0);
+		pos[7] = new Vector2(1,1);
+		pos[8] = new Vector2(1,2);
+		pos[9] = new Vector2(1,3);
+		pos[10] = new Vector2(1,4);
+		pos[11] = new Vector2(1,5);
 		
 		for(int i=6; i<=11; i++) {
 			//hexs[i] = new Character(200+(i*63),Game.getHeight()-100,"Guard " + (i+1),manager.get(AssetsManager.CHARGUARD,Texture.class), 1, 0, 0, 0, 0, 0, 0);
@@ -231,6 +265,12 @@ public class GameScreen implements Screen {
 		}
 		
 		preview = Preview.getInstance();
+		gameEvents = GameEvents.getInstance();
+		
+		Music background = manager.get("data/music_background.ogg");
+		//background.play();
+		background.setLooping(true);
+		
 	}
 
 	@Override

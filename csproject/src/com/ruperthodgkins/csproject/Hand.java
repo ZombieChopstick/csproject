@@ -69,6 +69,10 @@ public class Hand {
 		
 	}
 	
+	public void setRememberLastCardPosition(boolean remember) {
+		rememberLastCardPosition = remember;
+	}
+	
 	/*public void bringCardForward(Card c) {
 		for(Card card : hand) {
 			if(card == c) {

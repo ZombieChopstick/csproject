@@ -1,14 +1,22 @@
 package com.ruperthodgkins.csproject;
 
 public class Timer extends Thread {
+	private static Timer instance;
 	private int minutes;
 	private int seconds;
 	private boolean running;
 	
-	public Timer() {
+	private Timer() {
 		minutes = 0;
 		seconds = 0;
 		running = false;
+	}
+	
+	public static Timer getInstance() {
+		if(instance == null) {
+			instance = new Timer();
+		}
+		return instance;
 	}
 	
 	public void startTimer() {

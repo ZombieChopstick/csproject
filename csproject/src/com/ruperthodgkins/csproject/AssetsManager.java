@@ -11,6 +11,7 @@ public class AssetsManager {
 	public static final String CARDSUPERPOTION = "data/cardpotion.png";
 	public static final String CARDNONE = "data/nocard.png";
 	public static final String CARDCHARGUARD = "data/cardchar.png";
+	public static final String CARDCHARGUARDRED = "data/cardcharred.png";
 	
 	public static final String BUTTONENDTURN = "data/buttonendturn.png";
 	

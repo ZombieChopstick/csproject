@@ -134,6 +134,29 @@ public class Character {
 		this.hp+=hp;
 	}
 	
+	public void adjustHP(int hp) {
+		this.hp+=hp;
+	}
+	
+	public void increaseXP(int xp) {
+		this.xp+=xp;
+	}
+	
+	public void die() {	
+		Card characterCard = new Card();
+		if(owner.getTeamColour().equals("green")) {
+			characterCard.setCardPic((Texture) AssetsManager.getInstance().get(AssetsManager.CARDCHARGUARD));
+		}
+		else if(owner.getTeamColour().equals("red")) {
+			characterCard.setCardPic((Texture) AssetsManager.getInstance().get(AssetsManager.CARDCHARGUARDRED));
+		}
+		characterCard.setName(name);
+		characterCard.flipFaceUp();
+		owner.getDiscardPile().addCard(characterCard);
+		characterCard.setRepresentingCharacter(this);
+		owner.getCharacters().remove(this);
+	}
+	
 	public void setPosition(float x, float y) {
 		this.x = x;
 		this.y = y;
@@ -160,6 +183,11 @@ public class Character {
 	
 	public CharacterType getCharacterType() {
 		return type;
+	}
+	
+	public void attackCharacter(Character opponent) {
+		opponent.adjustHP(-25);
+		increaseXP(6);
 	}
 	
 	public boolean hit(float x, float y) {

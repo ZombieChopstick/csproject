@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 public class Board {
-	private HashMap<Vector2,Character> characters;
+	private static HashMap<Vector2,Character> characters;
 	private HashMap<Vector2,BoardHex> board;
 	private int x;
 	private int y;
@@ -26,7 +26,9 @@ public class Board {
 	private boolean mouseHeld = false;
 	private static boolean canAttackCharacter = false;
 	private static Player controller = null;
+	private static Player opponent = null;
 	private static boolean canMoveCharacter = false;
+	private Vector2[] centreCoords = {new Vector2(4,4), new Vector2(4,5), new Vector2(5,4), new Vector2(5,5), new Vector2(5,6), new Vector2(6,4), new Vector2(6,5)};
 	
 	public Board(int x, int y) {
 		characters = new HashMap<Vector2,Character>();
@@ -130,11 +132,11 @@ public class Board {
 		}
 		
 		if(characters.containsKey(left) && characters.get(left).getOwner() != controller) { targets[0] = left; }
-		if(characters.containsKey(right) && characters.get(left).getOwner() != controller) { targets[1] = right; }
-		if(characters.containsKey(leftdown) && characters.get(left).getOwner() != controller) { targets[2] = leftdown; }
-		if(characters.containsKey(leftup) && characters.get(left).getOwner() != controller) { targets[3] = leftup; }
-		if(characters.containsKey(rightdown) && characters.get(left).getOwner() != controller) { targets[4] = rightdown; }
-		if(characters.containsKey(rightup) && characters.get(left).getOwner() != controller) { targets[5] = rightup; }
+		if(characters.containsKey(right) && characters.get(right).getOwner() != controller) { targets[1] = right; }
+		if(characters.containsKey(leftdown) && characters.get(leftdown).getOwner() != controller) { targets[2] = leftdown; }
+		if(characters.containsKey(leftup) && characters.get(leftup).getOwner() != controller) { targets[3] = leftup; }
+		if(characters.containsKey(rightdown) && characters.get(rightdown).getOwner() != controller) { targets[4] = rightdown; }
+		if(characters.containsKey(rightup) && characters.get(rightup).getOwner() != controller) { targets[5] = rightup; }
 		
 		return targets;
 	}
@@ -157,6 +159,10 @@ public class Board {
 	
 	public static void setControllingPlayer(Player p) {
 		controller = p;
+	}
+	
+	public static void setOpposingPlayer(Player p) {
+		opponent = p;
 	}
 	
 	public static boolean getCanMoveCharacter() {
@@ -192,13 +198,13 @@ public class Board {
 		
 	}
 	
-	public HashMap<Vector2,Character> getCharacters() {
+	public static HashMap<Vector2,Character> getCharacters() {
 		return characters;
 	}
 	
 	public boolean mouseButtonReleased() {
 		if(mouseHeld == false) {
-			mouseHeld = Gdx.input.isTouched();
+			mouseHeld = Gdx.input.justTouched();
 		}
 		else {
 			if(Gdx.input.isTouched() == false) {
@@ -217,40 +223,82 @@ public class Board {
 		for(Character c : characters.values()) {
 			if(c.hit(Gdx.input.getX(),Gdx.input.getY()) && canMoveCharacter) {
 				Vector2[] movePositions = null;
-				if(mouseButtonReleased() && controller == c.getOwner() && characterSel == null || characterSel == c) {
-					c.setSelected(true);
-					characterSel = c;
+				if(Gdx.input.isTouched() && controller == c.getOwner() && characterSel == c) {
+					System.out.println("Deselecting Character");
+					c.setSelected(false);
+					characterSel = null;
+					break;
+				}
+				if(mouseButtonReleased() && controller == c.getOwner() && characterSel == null) {
+					System.out.println("Selecting Character");
 					Vector2 coords = getCharacterCoords(c);
 					movePositions = getValidCoords(coords);
-					if(movePositions!=null) {
-						for(Vector2 v : movePositions) {
-							if(v!=null) {
-								board.get(v).setSelected(true);
-							}
+					for(Vector2 v : movePositions) {
+						if(v!=null) {
+							c.setSelected(true);
+							characterSel = c;
+							board.get(v).setSelected(true);
 						}
 					}
 				}				
 				//COLLAPSED CODE MOVED TO BOTTOM OF CLASS
-				preview.setCardPic((Texture) manager.get(AssetsManager.CARDCHARGUARD),c);
-				break;
+				if(c.getOwner().getTeamColour().equals("green")) {
+					preview.setCardPic((Texture) manager.get(AssetsManager.CARDCHARGUARD),c);
+					break;
+				}
+				else if(c.getOwner().getTeamColour().equals("red")) {
+					preview.setCardPic((Texture) manager.get(AssetsManager.CARDCHARGUARDRED),c);
+					break;
+				}
+				//break;
 			}
 			else if(c.hit(Gdx.input.getX(),Gdx.input.getY()) && canAttackCharacter) {
 				Vector2[] attackPositions = null;
-				if(mouseButtonReleased() && controller == c.getOwner() && characterSel == null) {
-					c.setSelected(true);
-					characterSel = c;
+				if(Gdx.input.isTouched() && controller == c.getOwner() && characterSel == c) {
+					System.out.println("Deselecting Character");
+					Vector2 coords = getCharacterCoords(c);
+					c.setSelected(false);
+					attackPositions = getTargetsInRange(coords,1);
+					//System.out.println(attackPositions);
+					for(Vector2 v : attackPositions) {
+						if(v!=null) {
+							characters.get(v).setSelected(false);
+						}
+					}
+					characterSel = null;
+					attackPositions = null;
+					break;
+				}
+				else if(mouseButtonReleased() && controller == c.getOwner() && characterSel == null) {
+					System.out.println("Selecting Character");
 					Vector2 coords = getCharacterCoords(c);
 					attackPositions = getTargetsInRange(coords,1);
-					if(attackPositions!=null) {
-						for(Vector2 v : attackPositions) {
-							if(v!=null) {
-								characters.get(v).setSelected(true);
-							}
+					//System.out.println(attackPositions);
+					c.setSelected(true);
+					characterSel = c;
+					for(Vector2 v : attackPositions) {
+						System.out.println(v);
+						if(v!=null) {
+							characters.get(v).setSelected(true);
 						}
 					}
 				}
-				else if(Gdx.input.justTouched() && controller != c.getOwner() && characterSel!=null) {
-					c.increaseHP(-10);
+				else if(Gdx.input.justTouched() && controller != c.getOwner() && characterSel!=null && c.getSelected()) {
+					
+					GameEvents.getInstance().addEvent(Timer.getInstance().getGameTime() + ": " + controller.getName() + "\'s " + characterSel.getName() + " attacked " + opponent.getName() + "\'s " + c.getName());
+					characterSel.attackCharacter(c);
+					if(c.getHP()<=0) {
+						c.die();
+						characters.values().remove(c);
+						GameEvents.getInstance().addEvent(Timer.getInstance().getGameTime() + ": " + controller.getName()  + "\'s " + characterSel.getName() + " killed " + opponent.getName() + "\'s " + c.getName());
+					}
+					Vector2 coords = getCharacterCoords(characterSel);
+					attackPositions = getTargetsInRange(coords,1);
+					for(Vector2 v : attackPositions) {
+						if(v!=null) {
+							characters.get(v).setSelected(false);
+						}
+					}
 					characterSel.setSelected(false);
 					characterSel = null;
 					c.setSelected(false);
@@ -258,8 +306,16 @@ public class Board {
 					characterAttacked = true;
 				}
 				//COLLAPSED CODE MOVED TO BOTTOM OF CLASS
-				preview.setCardPic((Texture) manager.get(AssetsManager.CARDCHARGUARD),c);
-				break;
+				if(c.getOwner().getTeamColour().equals("green")) {
+					preview.setCardPic((Texture) manager.get(AssetsManager.CARDCHARGUARD),c);
+					break;
+				}
+				else if(c.getOwner().getTeamColour().equals("red")) {
+					preview.setCardPic((Texture) manager.get(AssetsManager.CARDCHARGUARDRED),c);
+					break;
+				}
+				
+				
 			}
 			else {
 				preview.setCardPic(null, null);
@@ -275,8 +331,9 @@ public class Board {
 				hex.setSelected(false);
 			}
 			
-			if(hex.hit(Gdx.input.getX(),Gdx.input.getY()) && characterSel != null && hex.isSelected() && mouseButtonReleased()) {
+			if(hex.hit(Gdx.input.getX(),Gdx.input.getY()) && characterSel != null && hex.isSelected() && Gdx.input.isTouched()) {
 				if(canMoveCharacter && !canAttackCharacter) {
+					GameEvents.getInstance().addEvent(Timer.getInstance().getGameTime() + ": " + controller.getName() + " moved " + characterSel.getName());
 					Vector2 destPosition = getPosition(hex.getCoordinates());
 					characterSel.setPosition(destPosition.x, destPosition.y);
 					characterSel.setSelected(false);
@@ -288,7 +345,13 @@ public class Board {
 					canMoveCharacter = false;
 				}
 			}
-		}		
+		}
+		
+		for(Vector2 v : centreCoords) {
+			if(characters.get(v) != null) {
+				//resolve whether win/lose condition
+			}
+		}
 	}
 	
 	public void resize(int width, int height) {
