@@ -10,6 +10,7 @@ public class Button {
 	private Rectangle bbox;
 	private Texture buttonPic;
 	private String text;
+	private ButtonState state;
 	
 	public Button(String text, float x, float y) {
 		this.text = text;
@@ -17,6 +18,7 @@ public class Button {
 		this.y = y;
 		this.buttonPic = new Texture(Gdx.files.internal("data/buttonup.png"));
 		bbox = new Rectangle(x,y,buttonPic.getWidth(),buttonPic.getHeight());
+		state = ButtonState.STATIC;
 	}
 	
 	public Texture getButtonPic() {
@@ -48,14 +50,23 @@ public class Button {
 			buttonPic = new Texture(Gdx.files.internal("data/buttonover.png"));
 			if(Gdx.input.isTouched()) {
 				buttonPic = new Texture(Gdx.files.internal("data/buttondown.png"));
+				state = ButtonState.PRESSED;
 				return 2;
+			}
+			else {
+				if(state == ButtonState.PRESSED) state = ButtonState.RELEASED;
 			}
 			return 1;
 		}
 		else {
 			buttonPic = new Texture(Gdx.files.internal("data/buttonup.png"));
+			state = ButtonState.STATIC;
 			return 0;
 		}
+	}
+	
+	public ButtonState getState() {
+		return state;
 	}
 	
 	public void resize(int width, int height) {
