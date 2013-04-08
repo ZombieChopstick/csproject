@@ -16,6 +16,9 @@ public class Player {
 	private boolean turnStarted = false;
 	private String teamColour;
 	
+	//AI
+	private boolean aiControlled;
+	
 	public Player() {
 		hand = new Hand();
 		deck = new Deck(30);
@@ -23,6 +26,14 @@ public class Player {
 		myCharacters = new ArrayList<Character>();
 		id = nextID;
 		nextID++;
+	}
+	
+	public void setAIControlled(boolean ai) {
+		aiControlled = ai;
+	}
+	
+	public boolean getAIControlled() {
+		return aiControlled;
 	}
 	
 	public int getID() {

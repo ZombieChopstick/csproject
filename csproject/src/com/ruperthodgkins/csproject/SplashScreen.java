@@ -41,7 +41,7 @@ public class SplashScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		//System.out.println(alpha);
-		if(fadedOut) main.setScreen(new LoadingScreen(main));
+		if(fadedOut) main.setScreen(new MainMenuScreen(main));
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		batch.begin();
@@ -53,7 +53,7 @@ public class SplashScreen implements Screen {
 		
 		//SKIP SCREEN
 		if(Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-			main.setScreen(new LoadingScreen(main));
+			main.setScreen(new MainMenuScreen(main));
 		}
 	}
 

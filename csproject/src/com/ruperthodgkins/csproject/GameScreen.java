@@ -216,8 +216,10 @@ public class GameScreen implements Screen {
 		
 		player1.setName("Rupert");
 		player1.setTeamColour("green");
+		player1.setAIControlled(false);
 		player2.setName("Adam");
 		player2.setTeamColour("red");
+		player2.setAIControlled(true);
 		board = new Board(200,Game.getHeight()-80);
 		board.setupBoard(11);
 		Vector2[] pos = new Vector2[12];
