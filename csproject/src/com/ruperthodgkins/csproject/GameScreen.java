@@ -30,9 +30,11 @@ public class GameScreen implements Screen {
 	private Board board;
 	private Preview preview;
 	private GameEvents gameEvents;
+	private int gameMode;
 	
-	public GameScreen(Game m) {
+	public GameScreen(Game m, int mode) {
 		main = m;
+		gameMode = mode;
 	}
 	
 	@Override
@@ -135,8 +137,8 @@ public class GameScreen implements Screen {
 		font.drawWrapped(batch, gameEvents.getEvents(), gameEvents.getX()+20*(Game.getWidth()/1920f), gameEvents.getY()+15*(Game.getHeight()/1080f)+35*gameEvents.displayedEvents(), gameEvents.getBackgroundPic().getWidth()*(Game.getWidth()/1920f)-35, BitmapFont.HAlignment.LEFT);
 		
 		//RENDER TURN CONTROLLER
-		batch.draw((Texture) manager.get(AssetsManager.CHARGUARD), gameEvents.getX(), gameEvents.getY()+330,63, 72);
-		font.draw(batch, "Player 1: " + turns.getPlayer(0).getName(), gameEvents.getX()+ 70, gameEvents.getY()+380);
+		batch.draw((Texture) manager.get(AssetsManager.CHARGUARD), gameEvents.getX(), gameEvents.getY()+465 * Game.getHeight()/1080f,63, 72);
+		font.draw(batch, "Player 1: " + turns.getPlayer(0).getName(), gameEvents.getX()+ 70, gameEvents.getY()+525 * Game.getHeight()/1080f);
 		font.draw(batch, "Green Team", gameEvents.getX()+ 70, gameEvents.getY()+360);
 		batch.draw((Texture) manager.get(AssetsManager.CHARGUARDRED), gameEvents.getX()+235, gameEvents.getY()+330,63, 72);
 		font.draw(batch, "Player 2: " + turns.getPlayer(1).getName(), gameEvents.getX()+ 305, gameEvents.getY()+380);
@@ -216,10 +218,17 @@ public class GameScreen implements Screen {
 		
 		player1.setName("Rupert");
 		player1.setTeamColour("green");
-		player1.setAIControlled(false);
 		player2.setName("Adam");
 		player2.setTeamColour("red");
-		player2.setAIControlled(true);
+		
+		if(gameMode == 0) {
+			player1.setAIControlled(false);
+			player2.setAIControlled(false);
+		} else if(gameMode == 1) {
+			player1.setAIControlled(false);
+			player2.setAIControlled(true);
+		}
+		
 		board = new Board(200,Game.getHeight()-80);
 		board.setupBoard(11);
 		Vector2[] pos = new Vector2[12];

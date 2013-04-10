@@ -23,9 +23,11 @@ public class LoadingScreen implements Screen {
 	private AssetManager manager = AssetsManager.getInstance();
 	private BitmapFont font;
 	private Game main;
+	private int gameMode;
 	
-	public LoadingScreen(Game m) {
+	public LoadingScreen(Game m, int mode) {
 		main = m;
+		gameMode = mode;
 	}
 	
 	@Override
@@ -43,7 +45,7 @@ public class LoadingScreen implements Screen {
 			//once loaded go to new screen
 			//System.out.println("Loading Complete");
 			font.draw(batch,"Loading Complete", Game.getWidth() / 2 - (50 * font.getScaleX()) ,Game.getHeight() - 40);
-			main.setScreen(new GameScreen(main));
+			main.setScreen(new GameScreen(main,gameMode));
 		}
 		else {
 			//loading code
