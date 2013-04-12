@@ -31,6 +31,9 @@ public class GameScreen implements Screen {
 	private Preview preview;
 	private GameEvents gameEvents;
 	private int gameMode;
+	private Button endGameButton;
+	private Button endTurnButton;
+	private ArrayList<Button> buttons = new ArrayList<Button>();
 	
 	public GameScreen(Game m, int mode) {
 		main = m;
@@ -150,6 +153,12 @@ public class GameScreen implements Screen {
 		batch.draw(btnEndTurn.getButtonPic(), btnEndTurn.getX(), btnEndTurn.getY(), btnEndTurn.getButtonPic().getWidth()*(Game.getWidth()/1920f), btnEndTurn.getButtonPic().getHeight()*(Game.getHeight()/1080f));
 		if(btnEndTurn.hit(Gdx.input.getX(),Gdx.input.getY()) && Gdx.input.justTouched()) {
 			turns.switchPlayer(turns.getCurrentPlayer());
+		}
+		
+		for(Button b : buttons) {
+			b.hit(Gdx.input.getX(), Gdx.input.getY());
+			batch.draw(b.getButtonPic(), b.getX(), b.getY(), b.getButtonPic().getWidth()*(Game.getWidth()/1920f), b.getButtonPic().getHeight()*(Game.getHeight()/1080f));
+			font.draw(batch, b.getText(), b.getX()+20,b.getY()+32*(Game.getHeight()/1080f));
 		}
 		
 		//UPDATE THE BOARD
@@ -277,6 +286,8 @@ public class GameScreen implements Screen {
 		
 		preview = Preview.getInstance();
 		gameEvents = GameEvents.getInstance();
+		endGameButton = new Button("End Game",btnEndTurn.getX()-100,btnEndTurn.getY());
+		buttons.add(endGameButton);
 		
 		Music background = manager.get("data/music_background.ogg");
 		//background.play();

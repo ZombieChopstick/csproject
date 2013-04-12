@@ -3,6 +3,7 @@ package com.ruperthodgkins.csproject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,9 +21,11 @@ public class SplashScreen implements Screen {
 	private float alpha = 0;
 	private boolean fadedIn = false;
 	private boolean fadedOut = false;
+	private AssetManager manager;
 	
 	public SplashScreen(Game m) {
 		main = m;
+		manager = AssetsManager.getInstance();
 	}
 	
 	public void fadeIn(float delta) {
@@ -71,7 +74,13 @@ public class SplashScreen implements Screen {
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();
 		Texture.setEnforcePotImages(false);
-		texture = new Texture(Gdx.files.internal("data/splash.jpg"));
+		manager.load("data/splash.jpg", Texture.class);
+		manager.load("data/buttonup.png",Texture.class);
+		manager.load("data/buttonover.png",Texture.class);
+		manager.load("data/buttondown.png",Texture.class);
+		manager.finishLoading();
+		texture = manager.get("data/splash.jpg");
+		//texture = new Texture(Gdx.files.internal("data/splash.jpg"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		TextureRegion region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
 		sprite = new Sprite(region);

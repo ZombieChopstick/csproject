@@ -1,6 +1,7 @@
 package com.ruperthodgkins.csproject;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -11,14 +12,22 @@ public class Button {
 	private Texture buttonPic;
 	private String text;
 	private ButtonState state;
+	private Texture buttonUp;
+	private Texture buttonOver;
+	private Texture buttonDown;
+	private AssetManager manager;
 	
 	public Button(String text, float x, float y) {
 		this.text = text;
 		this.x = x;
 		this.y = y;
-		this.buttonPic = new Texture(Gdx.files.internal("data/buttonup.png"));
-		bbox = new Rectangle(x,y,buttonPic.getWidth(),buttonPic.getHeight());
 		state = ButtonState.STATIC;
+		manager = AssetsManager.getInstance();
+		buttonUp = manager.get("data/buttonup.png",Texture.class);
+		buttonOver = manager.get("data/buttonover.png",Texture.class);
+		buttonDown = manager.get("data/buttondown.png",Texture.class);
+		this.buttonPic = buttonUp;
+		bbox = new Rectangle(x,y,buttonPic.getWidth(),buttonPic.getHeight());
 	}
 	
 	public Texture getButtonPic() {
@@ -55,19 +64,20 @@ public class Button {
 	
 	public int hit(float x, float y) {
 		if(bbox.contains(x,Gdx.graphics.getHeight() - y)) {
-			buttonPic = new Texture(Gdx.files.internal("data/buttonover.png"));
+			buttonPic = buttonOver;
 			if(Gdx.input.isTouched()) {
-				buttonPic = new Texture(Gdx.files.internal("data/buttondown.png"));
+				buttonPic = buttonDown;
 				state = ButtonState.PRESSED;
-				return 2;
+				return 1;
 			}
 			else {
 				if(state == ButtonState.PRESSED) state = ButtonState.RELEASED;
+				else state = ButtonState.STATIC;
+				return 2;
 			}
-			return 1;
 		}
 		else {
-			buttonPic = new Texture(Gdx.files.internal("data/buttonup.png"));
+			buttonPic = buttonUp;
 			state = ButtonState.STATIC;
 			return 0;
 		}

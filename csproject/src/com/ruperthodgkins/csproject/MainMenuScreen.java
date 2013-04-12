@@ -4,14 +4,12 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class MainMenuScreen implements Screen {
 	private Game main;
@@ -23,9 +21,8 @@ public class MainMenuScreen implements Screen {
 	private ArrayList<Button> buttons = new ArrayList<Button>();
 	private Button optionsButton;
 	private Texture texture;
-	private Sprite sprite;
-	private OrthographicCamera camera;
 	private Button newGameButton;
+	private AssetManager manager;
 	
 	public MainMenuScreen(Game m) {
 		main = m;
@@ -36,25 +33,38 @@ public class MainMenuScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.setProjectionMatrix(camera.combined);
-		sprite.draw(batch);
+//		batch.setProjectionMatrix(camera.combined);
+//		sprite.draw(batch);
 		batch.setProjectionMatrix(batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight()));
+		
+		batch.draw(texture,0,0,texture.getWidth() * Game.getWidth()/1920f,texture.getHeight() * Game.getHeight() / 1080f);
 		for(Button b : buttons) {
 			b.hit(Gdx.input.getX(), Gdx.input.getY());
 			batch.draw(b.getButtonPic(), b.getX(), b.getY(), b.getButtonPic().getWidth()*(Game.getWidth()/1920f), b.getButtonPic().getHeight()*(Game.getHeight()/1080f));
 			font.draw(batch, b.getText(), b.getX()+20,b.getY()+32*(Game.getHeight()/1080f));
 		}
+		font.setColor(Color.WHITE);
+		font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 20, Game.getHeight()-10);
 		batch.end();
 		
 		if(newGameButton.getState() == ButtonState.RELEASED) {
-			buttons.add(newHumanGameButton);
-			buttons.add(newAIGameButton);
+			if(!buttons.contains(newHumanGameButton) && !buttons.contains(newAIGameButton)) {
+				buttons.add(1,newHumanGameButton);
+				buttons.add(2,newAIGameButton);
+				resize(Game.getWidth(),Game.getHeight());
+			}
+			else {
+				buttons.remove(newHumanGameButton);
+				buttons.remove(newAIGameButton);
+				resize(Game.getWidth(),Game.getHeight());
+			}
+			System.out.println(buttons.size());
 		}
 		
 		if(newHumanGameButton.getState() == ButtonState.RELEASED) {
 			main.setScreen(new LoadingScreen(main,0));
 		}
-		
+	
 		if(newAIGameButton.getState() == ButtonState.RELEASED) {
 			main.setScreen(new LoadingScreen(main,1));
 		}
@@ -68,7 +78,8 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		float y = Game.getHeight()/2;
+		System.out.println("resizing window");
+		float y = Game.getHeight()/2+50;
 		for(Button b : buttons) {
 			b.setX(Game.getWidth()-(b.getButtonPic().getWidth() * Game.getWidth()/1920f)+25);
 			b.setY(y);
@@ -80,16 +91,18 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
-		float w = Game.getWidth();
-		float h = Game.getHeight();
-		camera = new OrthographicCamera(1, h/w);
+//		float w = Game.getWidth();
+//		float h = Game.getHeight();
+//		camera = new OrthographicCamera(1, h/w);
 		Texture.setEnforcePotImages(false);
-		texture = new Texture(Gdx.files.internal("data/splash.jpg"));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		TextureRegion region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
-		sprite = new Sprite(region);
-		sprite.setSize(1, 1 * sprite.getHeight() / sprite.getWidth());
-		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
+		manager = AssetsManager.getInstance();
+		texture = manager.get("data/splash.jpg");
+		//texture = new Texture(Gdx.files.internal("data/splash.jpg"));
+//		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+//		TextureRegion region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
+//		sprite = new Sprite(region);
+//		sprite.setSize(1, 1 * sprite.getHeight() / sprite.getWidth());
+//		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
 		newGameButton = new Button("New Game",Game.getWidth(),Game.getHeight()/2);
 		newHumanGameButton = new Button("Human Versus",Game.getWidth(),Game.getHeight()/2);
 		newAIGameButton = new Button("AI Versus",Game.getWidth(),Game.getHeight()/2);
@@ -122,6 +135,7 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void dispose() {
 		batch.dispose();
+		texture.dispose();
 		font.dispose();
 	}
 
