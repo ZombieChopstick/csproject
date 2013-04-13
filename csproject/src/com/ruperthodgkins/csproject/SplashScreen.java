@@ -78,6 +78,7 @@ public class SplashScreen implements Screen {
 		manager.load("data/buttonup.png",Texture.class);
 		manager.load("data/buttonover.png",Texture.class);
 		manager.load("data/buttondown.png",Texture.class);
+		manager.load("data/buttondisabled.png",Texture.class);
 		manager.finishLoading();
 		texture = manager.get("data/splash.jpg");
 		//texture = new Texture(Gdx.files.internal("data/splash.jpg"));

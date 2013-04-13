@@ -1,5 +1,9 @@
 package com.ruperthodgkins.csproject;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -24,6 +28,7 @@ public class LoadingScreen implements Screen {
 	private BitmapFont font;
 	private Game main;
 	private int gameMode;
+	private Socket serverConn;
 	
 	public LoadingScreen(Game m, int mode) {
 		main = m;
@@ -39,7 +44,7 @@ public class LoadingScreen implements Screen {
 		sprite.draw(batch);
 		batch.setProjectionMatrix(batch.getProjectionMatrix().setToOrtho2D(0, 0, Game.getWidth(),  Game.getHeight()));
 		font.setColor(Color.WHITE);
-		font.setScale(2);
+		//font.setScale(2);
 		
 		if(manager.update()) {
 			//once loaded go to new screen
@@ -55,7 +60,22 @@ public class LoadingScreen implements Screen {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}*/
-			font.draw(batch,"Loading...", Game.getWidth() / 2 - (25 * font.getScaleX()) ,Game.getHeight() - 40);
+			if(gameMode == 2) {
+				font.draw(batch,"Connecting to server...", Game.getWidth() / 2 - (25 * font.getScaleX()) ,Game.getHeight() - 40);
+				if(serverConn == null) {
+					try {
+						serverConn = new Socket("127.0.0.1",8000);
+					} catch (UnknownHostException e) {
+						System.out.println("Unable to connect to server");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}
+			else {
+				font.draw(batch,"Loading...", Game.getWidth() / 2 - (25 * font.getScaleX()) ,Game.getHeight() - 40);
+			}
 		}
 		batch.end();
 	}
@@ -112,6 +132,7 @@ public class LoadingScreen implements Screen {
 	public void dispose() {
 		batch.dispose();
 		texture.dispose();
+		font.dispose();
 	}
 
 }

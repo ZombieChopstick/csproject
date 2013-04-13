@@ -33,7 +33,7 @@ public class Timer extends Thread {
 	}
 	
 	public void run() {
-		while(true) {
+		while(running) {
 			try {
 				Thread.sleep(1000);
 				seconds++;
@@ -45,6 +45,10 @@ public class Timer extends Thread {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void end() {
+		instance = null;
 	}
 	
 	public String getGameTime() {

@@ -19,7 +19,6 @@ public class GameScreen implements Screen {
 	private SpriteBatch batch;
 	private Texture texture;
 	private AssetManager manager = AssetsManager.getInstance();
-	@SuppressWarnings("unused")
 	private Game main;
 	private BitmapFont font;	
 	private Character[] chars = new Character[12];
@@ -150,15 +149,24 @@ public class GameScreen implements Screen {
 		font.draw(batch, "It is currently " + turns.getCurrentPlayer().getName() + "\'s turn.", gameEvents.getX()+ 130, gameEvents.getY()+325);
 		
 		//RENDER END TURN BUTTON
-		batch.draw(btnEndTurn.getButtonPic(), btnEndTurn.getX(), btnEndTurn.getY(), btnEndTurn.getButtonPic().getWidth()*(Game.getWidth()/1920f), btnEndTurn.getButtonPic().getHeight()*(Game.getHeight()/1080f));
-		if(btnEndTurn.hit(Gdx.input.getX(),Gdx.input.getY()) && Gdx.input.justTouched()) {
-			turns.switchPlayer(turns.getCurrentPlayer());
-		}
+//		batch.draw(btnEndTurn.getButtonPic(), btnEndTurn.getX(), btnEndTurn.getY(), btnEndTurn.getButtonPic().getWidth()*(Game.getWidth()/1920f), btnEndTurn.getButtonPic().getHeight()*(Game.getHeight()/1080f));
+//		if(btnEndTurn.hit(Gdx.input.getX(),Gdx.input.getY()) && Gdx.input.justTouched()) {
+//			turns.switchPlayer(turns.getCurrentPlayer());
+//		}
 		
 		for(Button b : buttons) {
 			b.hit(Gdx.input.getX(), Gdx.input.getY());
 			batch.draw(b.getButtonPic(), b.getX(), b.getY(), b.getButtonPic().getWidth()*(Game.getWidth()/1920f), b.getButtonPic().getHeight()*(Game.getHeight()/1080f));
 			font.draw(batch, b.getText(), b.getX()+20,b.getY()+32*(Game.getHeight()/1080f));
+		}
+		
+		if(endGameButton.getState() == ButtonState.RELEASED) {
+			Timer.getInstance().end();
+			main.setScreen(new MainMenuScreen(main));
+		}
+		
+		if(endTurnButton.getState() == ButtonState.RELEASED) {
+			turns.switchPlayer(turns.getCurrentPlayer());
 		}
 		
 		//UPDATE THE BOARD
@@ -193,6 +201,15 @@ public class GameScreen implements Screen {
 		board.resize(width, height);
 		preview.resize(width, height);
 		gameEvents.resize(width, height);
+		
+		float x = 20;
+		for(Button b : buttons) {
+			b.setX((Game.getWidth() - x) - (307*Game.getWidth() / 1920f));
+			b.setY((turns.getCurrentPlayer().getDeck().getDeckTexture().getHeight() + 10) * Game.getHeight() / 1080f);
+			//y = y - ((b.getButtonPic().getHeight() + 25) * Game.getHeight()/1080f);
+			x+=317 * width / 1920f;
+			b.resize(width, height);
+		}
 		/*currentWidth = width;
 		currentHeight = height;
 		System.out.println(currentWidth + "x" + currentHeight);
@@ -286,9 +303,10 @@ public class GameScreen implements Screen {
 		
 		preview = Preview.getInstance();
 		gameEvents = GameEvents.getInstance();
-		endGameButton = new Button("End Game",btnEndTurn.getX()-100,btnEndTurn.getY());
+		endGameButton = new Button("End Game",Game.getWidth() - (644*Game.getWidth() / 1920f),btnEndTurn.getY() * Game.getHeight() / 1080f);
+		endTurnButton = new Button("End Turn",Game.getWidth() - (307*Game.getWidth() / 1920f),btnEndTurn.getY() * Game.getHeight() / 1080f);
 		buttons.add(endGameButton);
-		
+		buttons.add(endTurnButton);
 		Music background = manager.get("data/music_background.ogg");
 		//background.play();
 		background.setLooping(true);

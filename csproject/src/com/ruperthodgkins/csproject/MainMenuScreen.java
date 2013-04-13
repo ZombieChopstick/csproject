@@ -23,6 +23,7 @@ public class MainMenuScreen implements Screen {
 	private Texture texture;
 	private Button newGameButton;
 	private AssetManager manager;
+	private Button newTCPGameButton;
 	
 	public MainMenuScreen(Game m) {
 		main = m;
@@ -51,11 +52,19 @@ public class MainMenuScreen implements Screen {
 			if(!buttons.contains(newHumanGameButton) && !buttons.contains(newAIGameButton)) {
 				buttons.add(1,newHumanGameButton);
 				buttons.add(2,newAIGameButton);
+				buttons.add(3,newTCPGameButton);
+				buttons.remove(optionsButton);
+				buttons.remove(quitGameButton);
+				newGameButton.setText("Back");
 				resize(Game.getWidth(),Game.getHeight());
 			}
 			else {
 				buttons.remove(newHumanGameButton);
 				buttons.remove(newAIGameButton);
+				buttons.remove(newTCPGameButton);
+				buttons.add(optionsButton);
+				buttons.add(quitGameButton);
+				newGameButton.setText("New Game");
 				resize(Game.getWidth(),Game.getHeight());
 			}
 			System.out.println(buttons.size());
@@ -69,6 +78,10 @@ public class MainMenuScreen implements Screen {
 			main.setScreen(new LoadingScreen(main,1));
 		}
 		
+		if(newTCPGameButton.getState() == ButtonState.RELEASED) {
+			main.setScreen(new LoadingScreen(main,2));
+		}
+		
 		if(quitGameButton.getState() == ButtonState.RELEASED) {
 			System.exit(0);
 		}
@@ -79,7 +92,7 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		System.out.println("resizing window");
-		float y = Game.getHeight()/2+50;
+		float y = Game.getHeight()/2+65;
 		for(Button b : buttons) {
 			b.setX(Game.getWidth()-(b.getButtonPic().getWidth() * Game.getWidth()/1920f)+25);
 			b.setY(y);
@@ -106,8 +119,11 @@ public class MainMenuScreen implements Screen {
 		newGameButton = new Button("New Game",Game.getWidth(),Game.getHeight()/2);
 		newHumanGameButton = new Button("Human Versus",Game.getWidth(),Game.getHeight()/2);
 		newAIGameButton = new Button("AI Versus",Game.getWidth(),Game.getHeight()/2);
+		newTCPGameButton = new Button("TCP/IP Versus",Game.getWidth(),Game.getHeight()/2);
 		optionsButton = new Button("Options",20,Game.getHeight()/2-((newHumanGameButton.getButtonPic().getHeight() + 25) * Game.getHeight()/1080f));
+		optionsButton.setDisabled(true);
 		quitGameButton = new Button("Quit Game",Game.getWidth(),Game.getHeight()/2-((optionsButton.getButtonPic().getHeight() + 25) * Game.getHeight()/1080f));
+		//backButton = new Button("< Back",Game.getWidth(),Game.getHeight()/2);
 		buttons.add(newGameButton);
 		buttons.add(optionsButton);
 		buttons.add(quitGameButton);

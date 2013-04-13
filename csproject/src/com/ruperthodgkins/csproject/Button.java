@@ -15,7 +15,9 @@ public class Button {
 	private Texture buttonUp;
 	private Texture buttonOver;
 	private Texture buttonDown;
+	private Texture buttonDisabled;
 	private AssetManager manager;
+	private boolean disabled;
 	
 	public Button(String text, float x, float y) {
 		this.text = text;
@@ -26,8 +28,18 @@ public class Button {
 		buttonUp = manager.get("data/buttonup.png",Texture.class);
 		buttonOver = manager.get("data/buttonover.png",Texture.class);
 		buttonDown = manager.get("data/buttondown.png",Texture.class);
+		buttonDisabled = manager.get("data/buttondisabled.png",Texture.class);
 		this.buttonPic = buttonUp;
 		bbox = new Rectangle(x,y,buttonPic.getWidth(),buttonPic.getHeight());
+		disabled = false;
+	}
+	
+	public boolean getDisabled() {
+		return disabled;
+	}
+	
+	public void setDisabled(boolean disable) {
+		disabled = disable;
 	}
 	
 	public Texture getButtonPic() {
@@ -63,7 +75,7 @@ public class Button {
 	}
 	
 	public int hit(float x, float y) {
-		if(bbox.contains(x,Gdx.graphics.getHeight() - y)) {
+		if(bbox.contains(x,Gdx.graphics.getHeight() - y) && !disabled) {
 			buttonPic = buttonOver;
 			if(Gdx.input.isTouched()) {
 				buttonPic = buttonDown;
@@ -77,7 +89,8 @@ public class Button {
 			}
 		}
 		else {
-			buttonPic = buttonUp;
+			if(disabled) buttonPic = buttonDisabled;
+			else buttonPic = buttonUp;
 			state = ButtonState.STATIC;
 			return 0;
 		}
