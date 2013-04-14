@@ -1,8 +1,13 @@
 package com.ruperthodgkins.csproject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3075456997042754391L;
 	private Hand hand;
 	private Deck deck;
 	private Discard discard;

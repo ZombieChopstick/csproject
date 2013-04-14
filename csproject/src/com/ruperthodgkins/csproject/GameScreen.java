@@ -1,5 +1,10 @@
 package com.ruperthodgkins.csproject;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -22,10 +27,10 @@ public class GameScreen implements Screen {
 	private Game main;
 	private BitmapFont font;	
 	private Character[] chars = new Character[12];
-	private Player player1 = new Player();
-	private Player player2 = new Player();
-	private TurnController turns = new TurnController(player1, player2);
-	private EndTurnButton btnEndTurn = new EndTurnButton(turns.getCurrentPlayer().getDeck().getX(),turns.getCurrentPlayer().getDeck().getY()+434);
+	private Player player1;
+	private Player player2;
+	private TurnController turns;
+	//private EndTurnButton btnEndTurn = new EndTurnButton(turns.getCurrentPlayer().getDeck().getX(),turns.getCurrentPlayer().getDeck().getY()+434);
 	private Board board;
 	private Preview preview;
 	private GameEvents gameEvents;
@@ -33,10 +38,12 @@ public class GameScreen implements Screen {
 	private Button endGameButton;
 	private Button endTurnButton;
 	private ArrayList<Button> buttons = new ArrayList<Button>();
+	private Socket serverConn = null;
 	
-	public GameScreen(Game m, int mode) {
+	public GameScreen(Game m, int mode, Socket serverConn) {
 		main = m;
 		gameMode = mode;
+		if(serverConn != null) this.serverConn = serverConn;
 	}
 	
 	@Override
@@ -83,15 +90,15 @@ public class GameScreen implements Screen {
 			if(hex.hit(Gdx.input.getX(),Gdx.input.getY())) {
 				font.draw(batch, "Co-ordinates: " + hex.getCoordinates(), 20, Game.getHeight()-70);
 			}
-			batch.draw(hex.getHexPic(), hex.getX(), hex.getY(), hex.getHexPic().getWidth(), hex.getHexPic().getHeight());
+			batch.draw(hex.getHexPic(), hex.getX()*(Game.getWidth()/1920f), hex.getY()*(Game.getHeight()/1080f), hex.getHexPic().getWidth()*(Game.getWidth()/1920f), hex.getHexPic().getHeight()*(Game.getHeight()/1080f));
 		}
 		
 		//RENDER CHARACTERS ON BOARD
 		for(Character c : Board.getCharacters().values()) {
-			batch.draw(c.getCharPic(), c.getX(), c.getY(), c.getCharPic().getWidth(), c.getCharPic().getHeight());
+			batch.draw(c.getCharPic(), c.getX()*(Game.getWidth()/1920f), c.getY()*(Game.getHeight()/1080f), c.getCharPic().getWidth()*(Game.getWidth()/1920f), c.getCharPic().getHeight()*(Game.getHeight()/1080f));
 			if(c.getSelected()) {
 				Sprite select = new Sprite((Texture) manager.get(AssetsManager.HEXGREENHOVER));
-				select.translate(c.getX(), c.getY());
+				select.translate(c.getX()*(Game.getHeight()/1080f), c.getY()*(Game.getHeight()/1080f));
 				select.draw(batch,0.6f);
 			}
 		}
@@ -197,7 +204,7 @@ public class GameScreen implements Screen {
 		}
 		//turns.getCurrentPlayer().getDeck().resize(width, height);
 		//turns.getCurrentPlayer().getDiscardPile().resize(width,height);
-		btnEndTurn.resize(width, height);
+		//btnEndTurn.resize(width, height);
 		board.resize(width, height);
 		preview.resize(width, height);
 		gameEvents.resize(width, height);
@@ -223,6 +230,40 @@ public class GameScreen implements Screen {
 	public void show() {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
+		if(gameMode == 2) {
+			player1 = new Player();
+			try {
+				serverConn = new Socket("127.0.0.1",8000);
+//				BufferedReader confirmGame = new BufferedReader(new InputStreamReader(serverConn.getInputStream()));
+//				String response = confirmGame.readLine();
+//				System.out.println("Server Response: " + response);
+//				while(response == null) {
+//					response = confirmGame.readLine();
+//					System.out.println("Server Response: " + response);
+//				}
+				ObjectOutputStream outs = new ObjectOutputStream(serverConn.getOutputStream());
+				outs.writeObject(player1);
+				ObjectInputStream ins = new ObjectInputStream(serverConn.getInputStream());
+				Object remotePlayer = ins.readObject();
+				Player player2 = (Player) remotePlayer;
+				turns = new TurnController(player1,player2);
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			 
+		} else {
+			player1 = new Player();
+			player2 = new Player();
+			turns = new TurnController(player1,player2);
+		}
+		
 		
 		//POPULATE WITH DEMO DATA
 		for(int i = 0; i<10; i++) {
@@ -303,8 +344,8 @@ public class GameScreen implements Screen {
 		
 		preview = Preview.getInstance();
 		gameEvents = GameEvents.getInstance();
-		endGameButton = new Button("End Game",Game.getWidth() - (644*Game.getWidth() / 1920f),btnEndTurn.getY() * Game.getHeight() / 1080f);
-		endTurnButton = new Button("End Turn",Game.getWidth() - (307*Game.getWidth() / 1920f),btnEndTurn.getY() * Game.getHeight() / 1080f);
+		endGameButton = new Button("End Game",Game.getWidth() - (644*Game.getWidth() / 1920f),434 * Game.getHeight() / 1080f);
+		endTurnButton = new Button("End Turn",Game.getWidth() - (307*Game.getWidth() / 1920f),434 * Game.getHeight() / 1080f);
 		buttons.add(endGameButton);
 		buttons.add(endTurnButton);
 		Music background = manager.get("data/music_background.ogg");
