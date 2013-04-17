@@ -1,8 +1,6 @@
 package com.ruperthodgkins.csproject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -56,14 +54,10 @@ public class LoadingScreen implements Screen {
 				font.draw(batch,"Connecting to server...", Game.getWidth() / 2 - (25 * font.getScaleX()) ,Game.getHeight() - 40);
 				if(serverConn == null) {
 					try {
-						serverConn = new Socket("127.0.0.1",8000);
+						serverConn = new Socket("127.0.0.1",8080);
 						PrintWriter outs = new PrintWriter(serverConn.getOutputStream());
 						outs.write("Rupert"); //replace with profile name
 						outs.flush();
-						BufferedReader confirmGame = new BufferedReader(new InputStreamReader(serverConn.getInputStream()));
-						while(confirmGame.readLine() == null) {
-							
-						}
 						main.setScreen(new GameScreen(main,gameMode,serverConn));
 					} catch (UnknownHostException e) {
 						System.out.println("Unable to connect to server");

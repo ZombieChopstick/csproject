@@ -1,20 +1,16 @@
 package com.ruperthodgkins.csproject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class GameServer extends Thread {
 	
-	private HashMap<String,Socket> playerlist;
+	private ArrayList<Socket> clientSessions;
 	private ServerSocket serverSock;
 	private Socket playerSock;
-	private BufferedReader ins;
 	
 	public static void main(String[] args) {
 		GameServer server = new GameServer();
@@ -22,39 +18,42 @@ public class GameServer extends Thread {
 	}
 	
 	public GameServer() {
-		playerlist = new HashMap<String,Socket>();
+		clientSessions = new ArrayList<Socket>();
 	}
 	
-	public void addPlayer(String p, Socket sock) {
-		playerlist.put(p,sock);
+	public void addClientSession(Socket sock) {
+		clientSessions.add(sock);
 	}
 	
-	public void removePlayer(String p) {
-		playerlist.remove(p);
+	public void removeClientSession(Socket sock) {
+		clientSessions.remove(sock);
+	}
+	
+	public void pairPlayers() {
+		if(clientSessions.size() % 2 == 0) {
+			Socket player1 = clientSessions.get(0);
+			Socket player2 = clientSessions.get(1);
+			try {
+				PrintWriter outs = new PrintWriter(player1.getOutputStream());
+				outs.write(player2.getInetAddress().toString());
+				PrintWriter outs2 = new PrintWriter(player2.getOutputStream());
+				outs2.write(player1.getInetAddress().toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void run() {
 		try {
-			serverSock = new ServerSocket(8000);
-			System.out.println("Server running on port 8000");
+			serverSock = new ServerSocket(8080);
+			System.out.println("Server running on port 8080");
 			System.out.println("Waiting for players to join");
 			while(true) {
 				playerSock = serverSock.accept();
-				ins = new BufferedReader(new InputStreamReader(playerSock.getInputStream()));
-				String playerName = ins.readLine();
-				addPlayer(playerName,playerSock);
-				System.out.println(playerName + " has joined.");
-				ins.close();
-				
-				if(playerlist.size() > 1) {
-					Socket[] players = (Socket[]) playerlist.values().toArray();
-					BufferedWriter p1Confirm = new BufferedWriter(new OutputStreamWriter(players[0].getOutputStream()));
-					BufferedWriter p2Confirm = new BufferedWriter(new OutputStreamWriter(players[1].getOutputStream()));
-					p1Confirm.write("JOINED");
-					p2Confirm.write("JOINED");
-					Thread t = new Thread(new RemoteGame(players[0],players[1]));
-					t.start();
-				}
+				GameServerClient clientSession = new GameServerClient(playerSock);
+				clientSession.start();
+				addClientSession(playerSock);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

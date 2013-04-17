@@ -70,10 +70,6 @@ public class Button {
 		this.text = text;
 	}
 	
-	public void buttonPressedEvent() {
-		
-	}
-	
 	public int hit(float x, float y) {
 		if(bbox.contains(x,Gdx.graphics.getHeight() - y) && !disabled) {
 			buttonPic = buttonOver;

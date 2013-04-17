@@ -17,10 +17,6 @@ public class Board {
 	private Preview preview = Preview.getInstance();
 	private boolean characterSelected = false;
 	private Character characterSel = null;
-//	private Character holdingCharacter;
-//	private boolean rememberLastPosition = false;
-//	private float lastCharX;
-//	private float lastCharY;
 	private static boolean characterMoved = false;
 	private static boolean characterAttacked = false;
 	private boolean mouseHeld = false;
@@ -28,6 +24,9 @@ public class Board {
 	private static Player controller = null;
 	private static Player opponent = null;
 	private static boolean canMoveCharacter = false;
+	private boolean centreHolding = false;
+	private Player playerCurrentlyHolding = null;
+	private boolean gameEnded = false;
 	private Vector2[] centreCoords = {new Vector2(4,4), new Vector2(4,5), new Vector2(5,4), new Vector2(5,5), new Vector2(5,6), new Vector2(6,4), new Vector2(6,5)};
 	
 	public Board(int x, int y) {
@@ -37,12 +36,16 @@ public class Board {
 		this.y = y;
 	}
 	
+	public boolean getGameEnded() {
+		return gameEnded;
+	}
+	
 	public void setupBoard(int rows) {
 		int rowLength = 6;
 		for(int i = 0; i<(rows/2)+1; i++) {
 			for(int ii = 0; ii<rowLength; ii++) {
 				Vector2 coords = new Vector2(i,ii);
-				board.put(coords, new BoardHex(coords,x+(ii*63)-(i*31.5f),y-(i*54)));
+				board.put(coords, new BoardHex(coords,x+(ii*(63*Game.getWidth() / 1920f))-(i*(31.5f*Game.getWidth()/1920f)),y-(i*(54*Game.getWidth()/1920f))));
 			}
 			rowLength++;
 		}
@@ -50,7 +53,7 @@ public class Board {
 		for(int i = (rows/2); i<rows; i++) {
 			for(int ii = 0; ii<rowLength; ii++) {
 				Vector2 coords = new Vector2(i,ii);
-				board.put(coords, new BoardHex(coords,x+(ii*63)+((i-10)*31.5f),y-(i*54)));
+				board.put(coords, new BoardHex(coords,x+(ii*(63*Game.getWidth() / 1920f))+((i-10)*31.5f*Game.getWidth()/1920f),y-(i*(54*Game.getWidth()/1920f))));
 			}
 			rowLength--;
 		}
@@ -347,16 +350,34 @@ public class Board {
 			}
 		}
 		
+		Character centreCharacter = characters.get(centreCoords[4]);
+		if(centreCharacter != null) {
+			playerCurrentlyHolding = centreCharacter.getOwner();
+		}
+		
+		int positionsHeld = 0;
 		for(Vector2 v : centreCoords) {
-			if(characters.get(v) != null) {
+			Character ch = characters.get(v);
+			if(ch != null && ch.getOwner() == playerCurrentlyHolding) {
 				//resolve whether win/lose condition
+				positionsHeld++;
 			}
+		}
+		
+		if(positionsHeld == 7) { 
+			System.out.println(playerCurrentlyHolding.getName() + " wins the game."); 
+			gameEnded = true;
 		}
 	}
 	
+	public String getWinner() {
+		return playerCurrentlyHolding.getName();
+	}
+	
 	public void resize(int width, int height) {
-		x = width/2-400;
-		y = height - 80;
+		System.out.println(width + "," + height);
+		x = (int) (width/2-400 * Game.getWidth() / 1920f);
+		y = (int) (height - 80 / (Game.getHeight() / 1080f * 2));
 		setupBoard(11);
 		Vector2[] pos = new Vector2[characters.size()];
 		int i = 0;
@@ -364,46 +385,14 @@ public class Board {
 			pos[i] = v;
 			i++;
 		}
+		for(BoardHex hex : board.values()) {
+			hex.resize(width, height);
+		}
 		i = 0;
 		for(Character c : characters.values()) {
 			c.setPosition((int)getPosition(pos[i]).x,(int)getPosition(pos[i]).y);
 			i++;
 		}
+		
 	}
-	
-	/*				else if(characterSel == c && c.getSelected()) {
-	characterSel = null;
-	c.setSelected(false);
-}
-if(Gdx.input.isTouched()) {
-	if(holdingCharacter == null) {
-		lastCharX = c.getX();
-		lastCharY = c.getY();
-		rememberLastPosition = true;
-		c.setPosition(Gdx.input.getX()-(c.getCharPic().getWidth()*(Game.getWidth()/1920f)/2)-10, Game.getHeight()-Gdx.input.getY()-(c.getCharPic().getHeight()*(Game.getHeight()/1080f)/2)-10);
-		holdingCharacter = c;
-	}
-	else {
-		holdingCharacter.setPosition(Gdx.input.getX()-(holdingCharacter.getCharPic().getWidth()*(Game.getWidth()/1920f)/2)-10, Game.getHeight()-Gdx.input.getY()-(holdingCharacter.getCharPic().getHeight()*(Game.getHeight()/1080f)/2)-10);
-	}
-}
-else {
-	for(BoardHex hex : board.values()) {
-		if(holdingCharacter!=null && hex.hit(Gdx.input.getX(),Gdx.input.getY())) {
-			System.out.println(hex.getCoordinates());
-			holdingCharacter.setPosition(hex.getX(), hex.getY());
-			rememberLastPosition = false;
-			characters.values().remove(holdingCharacter);
-			characters.put(hex.getCoordinates(), holdingCharacter);
-			if(hex.getX() != lastCharX && hex.getY() != lastCharY)
-				characterMoved  = true;
-			break;
-		}
-	}
-	if(rememberLastPosition) {
-		c.setPosition(lastCharX, lastCharY);
-		rememberLastPosition = false;
-	}
-	holdingCharacter = null;
-}*/
 }

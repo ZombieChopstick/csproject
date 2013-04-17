@@ -19,6 +19,7 @@ public class TurnController {
 	private boolean mouseHeld = false;
 	private GameEvents gameEvents = GameEvents.getInstance();
 	private boolean eventsAdded = false;
+	private boolean gameEnded = false;
 
 	public TurnController(Player p1, Player p2) {
 		players.add(p1);
@@ -56,6 +57,10 @@ public class TurnController {
 
 	public ArrayList<Player> getPlayers() {
 		return players;
+	}
+	
+	public boolean getGameEnded() {
+		return gameEnded;
 	}
 
 	public void setupNewGame() {
@@ -124,9 +129,10 @@ public class TurnController {
 		Board.setOpposingPlayer(getOppositionPlayer());
 
 		if (currentPlayer.getCharacters().size() == 0) {
-			System.out.println(currentPlayer.getName() + "loses");
-			System.out.println(getOppositionPlayer().getName() + "wins");
-			System.exit(0);
+//			System.out.println(currentPlayer.getName() + "loses");
+//			System.out.println(getOppositionPlayer().getName() + "wins");
+//			System.exit(0);
+			gameEnded = true;
 		}
 
 		if (!p.getAIControlled()) {

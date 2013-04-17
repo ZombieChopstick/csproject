@@ -29,20 +29,20 @@ public class BoardHex {
 		hexPic = manager.get(AssetsManager.HEXGREEN,Texture.class);
 		hexHoverPic = manager.get(AssetsManager.HEXGREENHOVER,Texture.class);
 		mesh = new Mesh(true,6,6,new VertexAttribute(Usage.Position,3,"a_position")); 
-		float[] v = { this.x, this.y+18f, 0, 
-				   this.x, this.y + 54f, 0, 
-				   this.x + 31.5f, this.y +72f, 0, 
-				   this.x + 63f, this.y + 54f, 0, 
-				   this.x + 63f, this.y + 18f, 0, 
-				   this.x + 31.5f, this.y, 0};
+		float[] v = { this.x, this.y+18f* Game.getWidth() / 1920f, 0, 
+				   this.x, this.y + 54f* Game.getWidth() / 1920f, 0, 
+				   this.x + 31.5f* Game.getWidth() / 1920f, this.y +72f* Game.getWidth() / 1920f, 0, 
+				   this.x + 63f* Game.getWidth() / 1920f, this.y + 54f* Game.getWidth() / 1920f, 0, 
+				   this.x + 63f* Game.getWidth() / 1920f, this.y + 18f* Game.getWidth() / 1920f, 0, 
+				   this.x + 31.5f* Game.getWidth() / 1920f, this.y, 0};
 		mesh.setVertices(v);
 		mesh.setIndices(new short[] { 0, 1, 2, 3, 4, 5});
-		vertices.add(new Vector2(this.x,this.y+18f));
-		vertices.add(new Vector2(this.x,this.y+54f));
-		vertices.add(new Vector2(this.x+31.5f,this.y+72f));
-		vertices.add(new Vector2(this.x+63f,this.y+54f));
-		vertices.add(new Vector2(this.x+63f,this.y+18f));
-		vertices.add(new Vector2(this.x+31.5f,this.y));
+		vertices.add(new Vector2(this.x,this.y+18f * Game.getHeight() / 1080f));
+		vertices.add(new Vector2(this.x,this.y+54f * Game.getHeight() / 1080f));
+		vertices.add(new Vector2(this.x+31.5f * Game.getWidth() / 1920f,this.y+72f * Game.getHeight() / 1080f));
+		vertices.add(new Vector2(this.x+63f * Game.getWidth() / 1920f,this.y+54f * Game.getHeight() / 1080f));
+		vertices.add(new Vector2(this.x+63f * Game.getWidth() / 1920f,this.y+18f * Game.getHeight() / 1080f));
+		vertices.add(new Vector2(this.x+31.5f * Game.getWidth() / 1920f,this.y));
 	}
 	
 	public Vector2 getCoordinates() {
@@ -106,5 +106,16 @@ public class BoardHex {
 			return true;
 		else
 			return false;
+	}
+	
+	public void resize(int width, int height) {
+		vertices.clear();
+		vertices.add(new Vector2(this.x,this.y+18f * height / 1080f));
+		vertices.add(new Vector2(this.x,this.y+54f * height / 1080f));
+		vertices.add(new Vector2(this.x+31.5f * width / 1920f,this.y+72f * height / 1080f));
+		vertices.add(new Vector2(this.x+63f * width / 1920f,this.y+54f * height / 1080f));
+		vertices.add(new Vector2(this.x+63f * width / 1920f,this.y+18f * height / 1080f));
+		vertices.add(new Vector2(this.x+31.5f * width / 1920f,this.y));
+		
 	}
 }
