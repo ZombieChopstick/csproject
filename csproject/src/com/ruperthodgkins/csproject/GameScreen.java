@@ -36,6 +36,7 @@ public class GameScreen implements Screen {
 	private Button endGameButton;
 	private Button endTurnButton;
 	private ArrayList<Button> buttons = new ArrayList<Button>();
+	private Button withdrawUnitButton;
 
 	public GameScreen(Game m, int mode, Socket serverConn) {
 		main = m;
@@ -101,6 +102,21 @@ public class GameScreen implements Screen {
 			}
 			batch.draw(hex.getHexPic(), hex.getX(), hex.getY(),hex.getHexPic().getWidth() * Game.getWidth() / 1920f,hex.getHexPic().getHeight() * Game.getHeight() / 1080f);
 		}
+		
+		// RENDER PREVIEW
+		batch.draw(preview.getCardPic(), preview.getX(), preview.getY(),
+				preview.getCardPic().getWidth() * (Game.getWidth() / 1920f),
+				preview.getCardPic().getHeight() * (Game.getHeight() / 1080f));
+		if (turns.getCurrentPlayer().getHand().getHoldingCard() == null) {
+			font.setColor(Color.BLACK);
+			font.drawMultiLine(batch, preview.getCharacterInformation(),
+					preview.getX() + 30,
+					preview.getY() + 200 * (Game.getHeight() / 1080f), preview
+							.getCardPic().getWidth()
+							* (Game.getWidth() / 1920f) - 65,
+					BitmapFont.HAlignment.CENTER);
+		}
+		font.setColor(Color.WHITE);
 
 		// RENDER CHARACTERS ON BOARD
 		for (Character c : Board.getCharacters().values()) {
@@ -120,6 +136,12 @@ public class GameScreen implements Screen {
 						* (Game.getWidth() / 1920f),
 						select.getHeight() * (Game.getHeight() / 1080f));
 				batch.setColor(1, 1, 1, 1);
+				withdrawUnitButton.hit(Gdx.input.getX(), Gdx.input.getY());
+				batch.draw(withdrawUnitButton.getButtonPic(), withdrawUnitButton.getX(), withdrawUnitButton.getY(), withdrawUnitButton.getButtonPic()
+						.getWidth() * (Game.getWidth() / 1920f), withdrawUnitButton.getButtonPic()
+						.getHeight() * (Game.getHeight() / 1080f));
+				font.draw(batch, withdrawUnitButton.getText(), withdrawUnitButton.getX() + 20,
+						withdrawUnitButton.getY() + 32 * (Game.getHeight() / 1080f));
 			}
 		}
 
@@ -188,25 +210,11 @@ public class GameScreen implements Screen {
 				batch,
 				"Game Time: " + turns.getGameTime(),
 				preview.getX() - preview.getCardPic().getWidth()
-						* (Game.getWidth() / 1920f), preview.getY() - 50
+						* (Game.getWidth() / 1920f), preview.getY()+ preview.getCardPic().getWidth()
 						* (Game.getHeight() / 1920f),
 				preview.getCardPic().getWidth() * (Game.getWidth() / 1920f)
 						- 25 * (Game.getWidth() / 1920f),
 				BitmapFont.HAlignment.CENTER);
-
-		// RENDER PREVIEW
-		batch.draw(preview.getCardPic(), preview.getX(), preview.getY(),
-				preview.getCardPic().getWidth() * (Game.getWidth() / 1920f),
-				preview.getCardPic().getHeight() * (Game.getHeight() / 1080f));
-		if (turns.getCurrentPlayer().getHand().getHoldingCard() == null) {
-			font.setColor(Color.BLACK);
-			font.drawMultiLine(batch, preview.getCharacterInformation(),
-					preview.getX() + 30,
-					preview.getY() + 200 * (Game.getHeight() / 1080f), preview
-							.getCardPic().getWidth()
-							* (Game.getWidth() / 1920f) - 65,
-					BitmapFont.HAlignment.CENTER);
-		}
 
 		// RENDER GAME EVENTS
 		batch.draw(gameEvents.getBackgroundPic(), gameEvents.getX(), gameEvents
@@ -230,7 +238,7 @@ public class GameScreen implements Screen {
 						* (Game.getWidth() / 1920f) - 35,
 				BitmapFont.HAlignment.LEFT);
 
-		// RENDER TURN CONTROLLER
+		// RENDER GAME EVENTS
 		batch.draw((Texture) manager.get(AssetsManager.CHARGUARD),
 				gameEvents.getX(), gameEvents.getY() + 465 * Game.getHeight()
 						/ 1080f, 63, 72);
@@ -330,6 +338,8 @@ public class GameScreen implements Screen {
 			x += 317 * width / 1920f;
 			b.resize(width, height);
 		}
+		withdrawUnitButton.setX(endGameButton.getX());
+		withdrawUnitButton.setY(endGameButton.getY()+60*height/1080f);
 		/*
 		 * currentWidth = width; currentHeight = height;
 		 * System.out.println(currentWidth + "x" + currentHeight);
@@ -347,7 +357,7 @@ public class GameScreen implements Screen {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		if (gameMode == 2) {
-			player1 = new Player();
+			player1 = Profile.getInstance().getPlayerInstance();
 			try {
 				new Socket("127.0.0.1", 8000);
 				// BufferedReader confirmGame = new BufferedReader(new
@@ -376,7 +386,7 @@ public class GameScreen implements Screen {
 			}
 
 		} else {
-			player1 = new Player();
+			player1 = Profile.getInstance().getPlayerInstance();
 			player2 = new Player();
 			turns = new TurnController(player1, player2);
 		}
@@ -488,6 +498,7 @@ public class GameScreen implements Screen {
 		endTurnButton = new Button("End Turn", Game.getWidth()
 				- (307 * Game.getWidth() / 1920f),
 				434 * Game.getHeight() / 1080f);
+		withdrawUnitButton = new Button("Withdraw",endTurnButton.getX(),endTurnButton.getY() + 25);
 		buttons.add(endGameButton);
 		buttons.add(endTurnButton);
 		Music background = manager.get("data/music_background.ogg");

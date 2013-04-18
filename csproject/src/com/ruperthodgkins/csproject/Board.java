@@ -24,10 +24,10 @@ public class Board {
 	private static Player controller = null;
 	private static Player opponent = null;
 	private static boolean canMoveCharacter = false;
-	private boolean centreHolding = false;
 	private Player playerCurrentlyHolding = null;
 	private boolean gameEnded = false;
 	private Vector2[] centreCoords = {new Vector2(4,4), new Vector2(4,5), new Vector2(5,4), new Vector2(5,5), new Vector2(5,6), new Vector2(6,4), new Vector2(6,5)};
+	private int turnsHeld = 0;
 	
 	public Board(int x, int y) {
 		characters = new HashMap<Vector2,Character>();
@@ -365,8 +365,15 @@ public class Board {
 		}
 		
 		if(positionsHeld == 7) { 
-			System.out.println(playerCurrentlyHolding.getName() + " wins the game."); 
-			gameEnded = true;
+			//System.out.println(playerCurrentlyHolding.getName() + " wins the game."); 
+			turnsHeld++;
+			if(turnsHeld < 5) {
+				GameEvents.getInstance().addEvent(playerCurrentlyHolding.getName() + " is occupying the centre. " + (5 - turnsHeld)  + " until victory!");
+			} else {
+				gameEnded = true;
+			}
+		} else {
+			turnsHeld = 0;
 		}
 	}
 	
