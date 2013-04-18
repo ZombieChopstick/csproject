@@ -192,6 +192,10 @@ public class Board {
 		return characterSelected;
 	}
 	
+	public void setNoCharacterSel() {
+		characterSel = null;
+	}
+	
 	public void addCharacter(Vector2 coord, Character c) {
 		characters.put(coord, c);
 		c.getOwner().getCharacters().add(c);
@@ -384,7 +388,7 @@ public class Board {
 	public void resize(int width, int height) {
 		System.out.println(width + "," + height);
 		x = (int) (width/2-400 * Game.getWidth() / 1920f);
-		y = (int) (height - 80 / (Game.getHeight() / 1080f * 2));
+		y = (int) (height - 80 / (Game.getHeight() / 1080f));
 		setupBoard(11);
 		Vector2[] pos = new Vector2[characters.size()];
 		int i = 0;

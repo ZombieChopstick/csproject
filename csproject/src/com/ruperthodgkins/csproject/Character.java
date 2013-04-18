@@ -157,6 +157,21 @@ public class Character {
 		owner.getCharacters().remove(this);
 	}
 	
+	public void withdraw() {
+		Card characterCard = new Card();
+		if(owner.getTeamColour().equals("green")) {
+			characterCard.setCardPic((Texture) AssetsManager.getInstance().get(AssetsManager.CARDCHARGUARD));
+		}
+		else if(owner.getTeamColour().equals("red")) {
+			characterCard.setCardPic((Texture) AssetsManager.getInstance().get(AssetsManager.CARDCHARGUARDRED));
+		}
+		characterCard.setName(name);
+		characterCard.flipFaceUp();
+		owner.getField().addCharacter(characterCard);
+		characterCard.setRepresentingCharacter(this);
+		owner.getCharacters().remove(this);
+	}
+	
 	public void setPosition(float x, float y) {
 		this.x = x;
 		this.y = y;

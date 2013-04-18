@@ -99,7 +99,9 @@ public class MainMenuScreen implements Screen {
 				String[] profileNames = {"Profile Empty","Profile Empty","Profile Empty","Profile Empty"};
 				int i = 0;
 				for(File f : fileList.listFiles()) {
-					if(f.getName()!="last.txt") {
+					System.out.println(f.getName().trim());
+					if(!f.getName().trim().equals("last.txt")) {
+						System.out.println(f.getName().trim());
 						profileNames[i] = f.getName().substring(0, 1).toUpperCase() + f.getName().substring(1, f.getName().length()-4);
 						i++;
 					}
@@ -132,18 +134,46 @@ public class MainMenuScreen implements Screen {
 		
 		if(profileButton1.getState() == ButtonState.RELEASED) {
 			Profile.getInstance().loadProfile(profileButton1.getText());
+			buttons.clear();
+			buttons.add(newGameButton);
+			buttons.add(loadProfileButton);
+			loadProfileButton.setText(Profile.getInstance().getCurrentProfile());
+			buttons.add(optionsButton);
+			buttons.add(quitGameButton);
+			resize(Game.getWidth(),Game.getHeight());
 		}
 		
-		if(profileButton1.getState() == ButtonState.RELEASED) {
-			Profile.getInstance().loadProfile(profileButton2.getText());	
+		if(profileButton2.getState() == ButtonState.RELEASED) {
+			Profile.getInstance().loadProfile(profileButton2.getText());
+			buttons.clear();
+			buttons.add(newGameButton);
+			buttons.add(loadProfileButton);
+			loadProfileButton.setText(Profile.getInstance().getCurrentProfile());
+			buttons.add(optionsButton);
+			buttons.add(quitGameButton);
+			resize(Game.getWidth(),Game.getHeight());
 		}
 		
-		if(profileButton1.getState() == ButtonState.RELEASED) {
+		if(profileButton3.getState() == ButtonState.RELEASED) {
 			Profile.getInstance().loadProfile(profileButton3.getText());
+			buttons.clear();
+			buttons.add(newGameButton);
+			buttons.add(loadProfileButton);
+			loadProfileButton.setText(Profile.getInstance().getCurrentProfile());
+			buttons.add(optionsButton);
+			buttons.add(quitGameButton);
+			resize(Game.getWidth(),Game.getHeight());
 		}
 		
-		if(profileButton1.getState() == ButtonState.RELEASED) {
+		if(profileButton4.getState() == ButtonState.RELEASED) {
 			Profile.getInstance().loadProfile(profileButton4.getText());
+			buttons.clear();
+			buttons.add(newGameButton);
+			buttons.add(loadProfileButton);
+			loadProfileButton.setText(Profile.getInstance().getCurrentProfile());
+			buttons.add(optionsButton);
+			buttons.add(quitGameButton);
+			resize(Game.getWidth(),Game.getHeight());
 		}
 		
 		if(quitGameButton.getState() == ButtonState.RELEASED) {

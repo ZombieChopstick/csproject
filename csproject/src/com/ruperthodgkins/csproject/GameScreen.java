@@ -27,8 +27,6 @@ public class GameScreen implements Screen {
 	private Player player1;
 	private Player player2;
 	private TurnController turns;
-	// private EndTurnButton btnEndTurn = new
-	// EndTurnButton(turns.getCurrentPlayer().getDeck().getX(),turns.getCurrentPlayer().getDeck().getY()+434);
 	private Board board;
 	private Preview preview;
 	private GameEvents gameEvents;
@@ -267,7 +265,27 @@ public class GameScreen implements Screen {
 		// Gdx.input.justTouched()) {
 		// turns.switchPlayer(turns.getCurrentPlayer());
 		// }
-
+		
+		//RENDER FIELD
+		int i = 0;
+		for(Texture t : turns.getCurrentPlayer().getField().getReserveSpaces()) {
+			if(i<3) {
+				batch.draw(t, turns.getCurrentPlayer().getField().getX(), turns.getCurrentPlayer().getField().getY()+i*t.getHeight()/2+i*5 * (Game.getHeight() / 1080f), t.getWidth()/2 * (Game.getWidth() / 1920f), t.getHeight()/2 * (Game.getHeight() / 1080f));
+			} else {
+				batch.draw(t, turns.getCurrentPlayer().getField().getX()+t.getWidth()/2+5 * (Game.getHeight() / 1080f), turns.getCurrentPlayer().getField().getY()+(i-3)*t.getHeight()/2+(i-3)*5 * (Game.getHeight() / 1080f), t.getWidth()/2 * (Game.getWidth() / 1920f), t.getHeight()/2 * (Game.getHeight() / 1080f));
+			}
+			
+			if(i < 6-turns.getCurrentPlayer().getField().getEmptySpaces()) {
+				ArrayList<Card> reserves = turns.getCurrentPlayer().getField().getReserveCharacters();
+				font.setColor(Color.BLACK);
+				Character c = reserves.get(i).getRepresentsChar();
+				font.drawMultiLine(batch, c.getName() + "\nHP: " + c.getHP() + "/" + c.getMaxHP(),turns.getCurrentPlayer().getField().getX()+18,turns.getCurrentPlayer().getField().getY()+i*t.getHeight()/2+i*5 * (Game.getHeight() / 1080f)+95, t.getWidth()/2 * (Game.getWidth() / 1920f) - 36,BitmapFont.HAlignment.CENTER);
+			}
+			i++;
+		}
+		font.setColor(Color.WHITE);
+		
+		//RENDER BUTTONS
 		for (Button b : buttons) {
 			b.hit(Gdx.input.getX(), Gdx.input.getY());
 			batch.draw(b.getButtonPic(), b.getX(), b.getY(), b.getButtonPic()
@@ -284,6 +302,25 @@ public class GameScreen implements Screen {
 
 		if (endTurnButton.getState() == ButtonState.RELEASED) {
 			turns.switchPlayer(turns.getCurrentPlayer());
+		}
+		
+		if(withdrawUnitButton.getState() == ButtonState.RELEASED) {
+			for(Character c : turns.getCurrentPlayer().getCharacters()) {
+				if(c.getSelected()) {
+					c.withdraw();
+					Vector2 coords = board.getCharacterCoords(c);
+					Vector2[] movePositions = board.getValidCoords(coords);
+					for(Vector2 v : movePositions) {
+						if(v!=null) {
+							c.setSelected(false);
+							board.setNoCharacterSel();
+							board.getBoard().get(v).setSelected(false);
+						}
+					}
+					Board.getCharacters().values().remove(c);
+					break;
+				}
+			}
 		}
 
 		// UPDATE THE BOARD
@@ -340,6 +377,7 @@ public class GameScreen implements Screen {
 		}
 		withdrawUnitButton.setX(endGameButton.getX());
 		withdrawUnitButton.setY(endGameButton.getY()+60*height/1080f);
+		withdrawUnitButton.resize(width, height);
 		/*
 		 * currentWidth = width; currentHeight = height;
 		 * System.out.println(currentWidth + "x" + currentHeight);
@@ -492,6 +530,7 @@ public class GameScreen implements Screen {
 
 		preview = Preview.getInstance();
 		gameEvents = GameEvents.getInstance();
+		
 		endGameButton = new Button("End Game", Game.getWidth()
 				- (644 * Game.getWidth() / 1920f),
 				434 * Game.getHeight() / 1080f);

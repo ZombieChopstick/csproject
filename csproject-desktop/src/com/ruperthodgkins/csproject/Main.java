@@ -14,9 +14,9 @@ public class Main {
 			cfg.fullscreen = Boolean.parseBoolean(args[2]);
 		}
 		else {
-			cfg.width = 1366;
-			cfg.height = 768;
-			cfg.fullscreen = false;
+			cfg.width = 1920;
+			cfg.height = 1080;
+			cfg.fullscreen = true;
 		}
 		cfg.resizable = true;
 		

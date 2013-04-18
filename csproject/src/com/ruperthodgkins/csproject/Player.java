@@ -11,6 +11,7 @@ public class Player implements Serializable {
 	private Hand hand;
 	private Deck deck;
 	private Discard discard;
+	private Field field;
 	private ArrayList<Character> myCharacters;
 	private static int nextID = 0;
 	private int id;
@@ -24,10 +25,12 @@ public class Player implements Serializable {
 	//AI
 	private boolean aiControlled;
 	
+	
 	public Player() {
 		hand = new Hand();
 		deck = new Deck(30);
 		discard = new Discard(0,0);
+		field = new Field(20,430);
 		myCharacters = new ArrayList<Character>();
 		id = nextID;
 		nextID++;
@@ -79,6 +82,10 @@ public class Player implements Serializable {
 	
 	public Discard getDiscardPile() {
 		return discard;
+	}
+	
+	public Field getField() {
+		return field;
 	}
 	
 	public boolean getFirstTurn() {
