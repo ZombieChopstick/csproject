@@ -479,13 +479,13 @@ public class GameScreen implements Screen {
 //		pos[3] = new Vector2(0, 3);
 //		pos[4] = new Vector2(0, 4);
 //		pos[5] = new Vector2(0, 5);
-		pos[0] = new Vector2(4, 4);
-		pos[1] = new Vector2(4, 5);
-		pos[2] = new Vector2(4, 6);
-		pos[3] = new Vector2(5, 4);
-		pos[4] = new Vector2(5, 5);
-		pos[5] = new Vector2(6, 4);
-		pos[6] = new Vector2(6, 5);
+		pos[0] = new Vector2(0, 2);
+		pos[1] = new Vector2(1, 6);
+		pos[2] = new Vector2(2, 0);
+		pos[3] = new Vector2(6, 0);
+		pos[4] = new Vector2(6, 9);
+		pos[5] = new Vector2(10, 1);
+		pos[6] = new Vector2(10, 5);
 
 		for (int i = 0; i <= 6; i++) {
 			// hexs[i] = new Character(200+(i*63),Game.getHeight()-100,"Guard "
@@ -507,13 +507,14 @@ public class GameScreen implements Screen {
 		// pos[9] = new Vector2(7,0);
 		// pos[10] = new Vector2(7,3);
 		// pos[11] = new Vector2(5,8);
-		pos[12] = new Vector2(1, 0);
-		pos[7] = new Vector2(1, 1);
-		pos[8] = new Vector2(1, 2);
-		pos[9] = new Vector2(1, 3);
-		pos[10] = new Vector2(1, 4);
-		pos[11] = new Vector2(1, 5);
-		pos[13] = new Vector2(1, 6);
+		
+		pos[7] = new Vector2(0, 0);
+		pos[8] = new Vector2(0, 4);
+		pos[9] = new Vector2(4, 0);
+		pos[10] = new Vector2(4, 9);
+		pos[11] = new Vector2(8, 7);
+		pos[12] = new Vector2(9, 0);
+		pos[13] = new Vector2(10, 3);
 
 		for (int i = 7; i <= 13; i++) {
 			// hexs[i] = new Character(200+(i*63),Game.getHeight()-100,"Guard "
